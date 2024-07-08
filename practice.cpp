@@ -6,36 +6,38 @@
 #include<unordered_set>
 class Solution {
 public:
-    bool canFinish(int numCourses, vector<vector<int>>& prerequisites) {
-        vector<int> inDegree(numCourses, 0);
-        vector<vector<int>> adjList(numCourses);
-
-        for(const auto& prerequisite : prerequisites){
-            int course = prerequisite[0];
-            int prereq = prerequisite[1];
-            adjList[prereq].push_back(course);
-            ++inDegree[course];
+    bool validTree(int n, vector<vector<int>>& edges) {
+        if (edges.size()!=n-1){
+            return false;
         }
-        queue<int> zeroInDegreeQueue;
-        for (int i = 0; i<numCourses; ++i){
-            if(inDegree[i] == 0){
-                zeroInDegreeQueue.push(i);
-            }
+
+        unordered_map<int, vector<int>> graph;
+        for(const auto& edge : edges){
+            graph[edge[0]].push_back(edge[1]);
+            graph[edge[1]].push_back(edge[0]);
         }
-        int visitedCourses = 0;
 
-        while(!zeroInDegreeQueue.empty()){
-            int currentCourse = zeroInDegreeQueue.front();
-            zeroInDegreeQueue.pop();
-            ++visitedCourses;
+        unordered_set<int> visited;
 
-            for(int nextCourse : adjList[currentCourse]){
-                --inDegree[nextCourse];
-                if(inDegree[nextCourse] == 0){
-                    zeroInDegreeQueue.push(nextCourse);
+        if(!dfs(0,-1, graph, visited)){
+            return false;
+        }
+        return visited.size() == n;
+    }
+private:
+    bool dfs(int node, int parent, unordered_map<int, vector<int>>& graph, unordered_set<int>& visited){
+        if(visited.count(node)){
+            return false;
+        }
+
+        visited.insert(node);
+        for(const int neighbor : graph[node]){
+            if(neighbor!=parent){
+                if(!dfs(neighbor, node, graph, visited)){
+                    return false;
                 }
             }
         }
-        return visitedCourses == numCourses;
+        return true;
     }
 };
