@@ -6,31 +6,60 @@
 #include<unordered_set>
 class Solution {
 public:
-    int countComponents(int n, vector<vector<int>>& edges) {
-        unordered_map<int, vector<int>> graph;
-        for(const auto& edge : edges){
-            graph[edge[0]].push_back(edge[1]);
-            graph[edge[1]].push_back(edge[0]);
-        }
-        unordered_set<int> visited;
-        int componentCount = 0;
+    string foreignDictionary(vector<string>& words) {
+        unordered_map<char, unordered_set<char>> graph;
+        unordered_map<char, int> inDegree;
+        queue<char> zeroInDegreeQueue;
+        string result;
 
-        for(int i=0; i<n; ++i){
-            if(!visited.count(i)){
-            ++componentCount;
-            dfs(i, graph, visited);
-        }
-    }
-    return componentCount;
-    }
-private:
-    void dfs(int node, unordered_map<int, vector<int>>& graph, unordered_set<int>& visited){
-        if(visited.count(node)) return;
-        visited.insert(node);
+        for(const string& word: words){
+            for(char c:word){
+                inDegree[c] = 0;
+                graph[c] = unordered_set<char>();
 
-        for(const int neighbor : graph[node]){
-            dfs(neighbor, graph, visited);
+            }
         }
+        for(int i = 0; i<words.size()-1; ++i){
+            const string& word1 = words[i];
+            const string& word2 = words[i+1];
+            int len = min(word1.length(), word2.length());
+            bool foundOrder = false;
+            for(int j = 0; j<len; ++j){
+                char parent = word1[j];
+                char child = word2[j];
+                if(parent!=child){
+                    if(graph[parent].find(child) == graph[parent].end()){
+                        graph[parent].insert(child);
+                        ++inDegree[child];
+                    }
+                    foundOrder = true;
+                    break;
+                }
+            }
+            if(!foundOrder && word1.length() > word2.length()){
+                return "";
+            }
+        }
+
+        for(const auto& entry : inDegree){
+            if(entry.second == 0){
+                zeroInDegreeQueue.push(entry.first);
+            }
+        }
+        while(!zeroInDegreeQueue.empty()){
+            char current = zeroInDegreeQueue.front();
+            zeroInDegreeQueue.pop();
+            result += current;
+            for(char neighbor : graph[current]){
+                --inDegree[neighbor];
+                if(inDegree[neighbor] == 0){
+                    zeroInDegreeQueue.push(neighbor);
+                }
+            }
+        }
+        if(result.length()!=inDegree.size()){
+            return "";
+        }
+        return result;
     }
-};
 };
