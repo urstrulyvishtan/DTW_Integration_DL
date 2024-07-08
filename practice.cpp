@@ -6,38 +6,31 @@
 #include<unordered_set>
 class Solution {
 public:
-    bool validTree(int n, vector<vector<int>>& edges) {
-        if (edges.size()!=n-1){
-            return false;
-        }
-
+    int countComponents(int n, vector<vector<int>>& edges) {
         unordered_map<int, vector<int>> graph;
         for(const auto& edge : edges){
             graph[edge[0]].push_back(edge[1]);
             graph[edge[1]].push_back(edge[0]);
         }
-
         unordered_set<int> visited;
+        int componentCount = 0;
 
-        if(!dfs(0,-1, graph, visited)){
-            return false;
+        for(int i=0; i<n; ++i){
+            if(!visited.count(i)){
+            ++componentCount;
+            dfs(i, graph, visited);
         }
-        return visited.size() == n;
+    }
+    return componentCount;
     }
 private:
-    bool dfs(int node, int parent, unordered_map<int, vector<int>>& graph, unordered_set<int>& visited){
-        if(visited.count(node)){
-            return false;
-        }
-
+    void dfs(int node, unordered_map<int, vector<int>>& graph, unordered_set<int>& visited){
+        if(visited.count(node)) return;
         visited.insert(node);
+
         for(const int neighbor : graph[node]){
-            if(neighbor!=parent){
-                if(!dfs(neighbor, node, graph, visited)){
-                    return false;
-                }
-            }
+            dfs(neighbor, graph, visited);
         }
-        return true;
     }
+};
 };
