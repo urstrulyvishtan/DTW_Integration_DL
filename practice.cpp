@@ -4,49 +4,58 @@
 #include <algorithm>
 #include<unordered_map>
 #include<unordered_set>
-class Node{
-    public:
-        int val;
-        vector<Node*> neighbors;
-        Node() : val(0), neighbors(vector<Node*>()){}
-        Node(int _val) : val(_val), neighbors(vector<Node*>()){}
-        Node(int _val, vector<Node*> _neighbors) : val(_val), neighbors(_neighbors){}
-};
-class Solution {    
+class Solution {
 public:
-    Node* cloneGraph(Node* node){
-        if (node == nullptr) return nullptr;
+    vector<vector<int>> pacificAtlantic(vector<vector<int>>& matrix) {
+        vector<vector<int>> result;
+        if (matrix.empty() || matrix[0].empty()) return result;
 
-        unordered_map<Node*, Node*> visited;
-        return clodeNode(node, visited);
+        int rows = matrix.size();
+        int cols = matrix[0].size();
+
+        vector<vector<bool>> pacific(rows, vector<bool>(cols, false));
+        vector<vector<bool>> atlantic(rows, vector<bool>(cols, false));
+
+        // Perform DFS from the edges of the grid
+        for (int i = 0; i < rows; ++i) {
+            dfs(matrix, pacific, i, 0);
+            dfs(matrix, atlantic, i, cols - 1);
+        }
+
+        for (int j = 0; j < cols; ++j) {
+            dfs(matrix, pacific, 0, j);
+            dfs(matrix, atlantic, rows - 1, j);
+        }
+
+        // Collect cells that can reach both oceans
+        for (int i = 0; i < rows; ++i) {
+            for (int j = 0; j < cols; ++j) {
+                if (pacific[i][j] && atlantic[i][j]) {
+                    result.push_back({i, j});
+                }
+            }
+        }
+
+        return result;
     }
 
 private:
-    Node* cloneNode(Node* node, unordered_map<Node*, Node*>& visited){
-        if(visited.find(node)!=visited.end()){
-            return visited[node];
-        }
+    void dfs(vector<vector<int>>& matrix, vector<vector<bool>>& visited, int row, int col) {
+        static vector<pair<int, int>> directions = {{-1, 0}, {1, 0}, {0, -1}, {0, 1}};
+        int rows = matrix.size();
+        int cols = matrix[0].size();
+        
+        visited[row][col] = true;
 
-        Node* clone = new Node(node->val);
-        visited[node] = clone;
+        for (const auto& dir : directions) {
+            int newRow = row + dir.first;
+            int newCol = col + dir.second;
 
-        for(Node* neighbor : node->neighbors){
-            clone->neighbors.push_back(cloneNode(neighbor, visited));
+            if (newRow < 0 || newRow >= rows || newCol < 0 || newCol >= cols || visited[newRow][newCol] || matrix[newRow][newCol] < matrix[row][col]) {
+                continue;
+            }
+
+            dfs(matrix, visited, newRow, newCol);
         }
-        return clone;
     }
-
 };
-
-void printGraph(Node* node, unordered_map<Node*, bool>& visited){
-    if(node == nullptr) return;
-    visited[node] == true;
-    cout << "Node" << node->val << ":";
-    for(Node* neighbor : node->neighbors){
-        cout<<neighbor->val<<" ";
-    }
-    cout<<endl;
-    for(Node* neighbor : node->neighbors){
-        printGraph(neighbor, visited);
-    }
-}
