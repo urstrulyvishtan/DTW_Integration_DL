@@ -4,36 +4,49 @@
 #include <algorithm>
 #include<unordered_map>
 #include<unordered_set>
-class Solution {
+class Node{
+    public:
+        int val;
+        vector<Node*> neighbors;
+        Node() : val(0), neighbors(vector<Node*>()){}
+        Node(int _val) : val(_val), neighbors(vector<Node*>()){}
+        Node(int _val, vector<Node*> _neighbors) : val(_val), neighbors(_neighbors){}
+};
+class Solution {    
 public:
-    int numIslands(std::vector<std::vector<char>>& grid ){
-        if(grid.empty()){
-            return 0;
-        }
-        int num_islands = 0;
-        int rows = grid.size();
-        int cols = grid[0].size();
+    Node* cloneGraph(Node* node){
+        if (node == nullptr) return nullptr;
 
-        for (int i= 0; i<rows; ++i){
-            for(int j=0; j<cols; ++j){
-                if(grid[i][j] == '1'){
-                    ++num_islands;
-                    dfs(grid, i, j);
-                }
-            }
-        }
-        return num_islands;
+        unordered_map<Node*, Node*> visited;
+        return clodeNode(node, visited);
     }
-    private:
-        void dfs(std::vector<std::vector<char>>& grid, int i, int j){
-            if(i<0 ||j<0||i>=grid.size()||grid[i][j] == '0'){
-                return;
-            }
-            grid[i][j] = '0';
-            dfs(grid, i-1, j);
-            dfs(grid, i+1, j);
-            dfs(grid, i, j-1);
-            dfs(grid, i, j+1);
+
+private:
+    Node* cloneNode(Node* node, unordered_map<Node*, Node*>& visited){
+        if(visited.find(node)!=visited.end()){
+            return visited[node];
         }
+
+        Node* clone = new Node(node->val);
+        visited[node] = clone;
+
+        for(Node* neighbor : node->neighbors){
+            clone->neighbors.push_back(cloneNode(neighbor, visited));
+        }
+        return clone;
+    }
 
 };
+
+void printGraph(Node* node, unordered_map<Node*, bool>& visited){
+    if(node == nullptr) return;
+    visited[node] == true;
+    cout << "Node" << node->val << ":";
+    for(Node* neighbor : node->neighbors){
+        cout<<neighbor->val<<" ";
+    }
+    cout<<endl;
+    for(Node* neighbor : node->neighbors){
+        printGraph(neighbor, visited);
+    }
+}
