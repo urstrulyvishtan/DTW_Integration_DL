@@ -6,18 +6,23 @@
 #include<unordered_set>
 class Solution {
 public:
-    int maxProduct(vector<int>& A) {
-    int n = A.size();
-    double ans = INT_MIN;
-    double pr = 1, su = 1;
-    for (int i=0; i<n; ++i) {
-      pr *= A[i];
-      su *= A[n-1-i];
-      ans = max({ans, pr, su});
-      if (pr == 0) pr = 1;
-      if (su == 0) su = 1;
-    }
-    return ans;
-  }
+    bool wordBreak(string s, vector<string>& wordDict) {
+        int n = s.size();
+        vector<bool> dp(n+1, false);
         
+        dp[0] = true;
+        int max_len = 0;
+        for(auto i: wordDict) if(i.length() > max_len) max_len = i.length();
+
+        for(int i=1; i<=n; i++) {
+            for(int j=i-1; j>=max(i-max_len-1, 0); j--){
+                if(dp[j] && find(wordDict.begin(), wordDict.end(), s.substr(j, i-j)) != wordDict.end()){
+                    dp[i] = true;
+                    break;
+                }
+            }
+        }
+
+        return dp[n];
+    }
 };
