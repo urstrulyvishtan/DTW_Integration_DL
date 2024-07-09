@@ -6,23 +6,18 @@
 #include<unordered_set>
 class Solution {
 public:
-    bool wordBreak(string s, vector<string>& wordDict) {
-        int n = s.size();
-        vector<bool> dp(n+1, false);
-        
-        dp[0] = true;
-        int max_len = 0;
-        for(auto i: wordDict) if(i.length() > max_len) max_len = i.length();
+    int lengthOfLIS(vector<int>& nums) {
+        vector<int> lis;
+        for(const int& num : nums){
+            auto it = lower_bound(lis.begin(), lis.end(), num);
 
-        for(int i=1; i<=n; i++) {
-            for(int j=i-1; j>=max(i-max_len-1, 0); j--){
-                if(dp[j] && find(wordDict.begin(), wordDict.end(), s.substr(j, i-j)) != wordDict.end()){
-                    dp[i] = true;
-                    break;
-                }
+            if(it == lis.end()){
+                lis.push_back(num);
+            }
+            else{
+                *it = num;
             }
         }
-
-        return dp[n];
+        return lis.size();
     }
 };
