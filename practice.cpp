@@ -6,60 +6,26 @@
 #include<unordered_set>
 class Solution {
 public:
-    string foreignDictionary(vector<string>& words) {
-        unordered_map<char, unordered_set<char>> graph;
-        unordered_map<char, int> inDegree;
-        queue<char> zeroInDegreeQueue;
-        string result;
+    int numDecodings(string s) {
+        int n = s.size();
+        if(n == 0 || s[0] == '0') return 0;
 
-        for(const string& word: words){
-            for(char c:word){
-                inDegree[c] = 0;
-                graph[c] = unordered_set<char>();
+        vector<int> dp(n+1, 0);
+        dp[0] = 1;
+        dp[1] = 1;
 
-            }
-        }
-        for(int i = 0; i<words.size()-1; ++i){
-            const string& word1 = words[i];
-            const string& word2 = words[i+1];
-            int len = min(word1.length(), word2.length());
-            bool foundOrder = false;
-            for(int j = 0; j<len; ++j){
-                char parent = word1[j];
-                char child = word2[j];
-                if(parent!=child){
-                    if(graph[parent].find(child) == graph[parent].end()){
-                        graph[parent].insert(child);
-                        ++inDegree[child];
-                    }
-                    foundOrder = true;
-                    break;
-                }
-            }
-            if(!foundOrder && word1.length() > word2.length()){
-                return "";
-            }
-        }
+        for(int i = 2; i <= n; ++i){
+            int oneDigit = stoi(s.substr(i-1, 1));
+            int twoDigits = stoi(s.substr(i-2, 2));
 
-        for(const auto& entry : inDegree){
-            if(entry.second == 0){
-                zeroInDegreeQueue.push(entry.first);
+            if(oneDigit>=1 && oneDigit<=9){
+                dp[i] +=dp[i-1];
+            }
+            if(twoDigits>=10 && twoDigits <=26){
+                dp[i] += dp[i-2];
             }
         }
-        while(!zeroInDegreeQueue.empty()){
-            char current = zeroInDegreeQueue.front();
-            zeroInDegreeQueue.pop();
-            result += current;
-            for(char neighbor : graph[current]){
-                --inDegree[neighbor];
-                if(inDegree[neighbor] == 0){
-                    zeroInDegreeQueue.push(neighbor);
-                }
-            }
-        }
-        if(result.length()!=inDegree.size()){
-            return "";
-        }
-        return result;
+        return dp[n];
+        
     }
 };
