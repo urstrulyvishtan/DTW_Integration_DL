@@ -6,26 +6,18 @@
 #include<unordered_set>
 class Solution {
 public:
-    int numDecodings(string s) {
-        int n = s.size();
-        if(n == 0 || s[0] == '0') return 0;
-
-        vector<int> dp(n+1, 0);
-        dp[0] = 1;
-        dp[1] = 1;
-
-        for(int i = 2; i <= n; ++i){
-            int oneDigit = stoi(s.substr(i-1, 1));
-            int twoDigits = stoi(s.substr(i-2, 2));
-
-            if(oneDigit>=1 && oneDigit<=9){
-                dp[i] +=dp[i-1];
-            }
-            if(twoDigits>=10 && twoDigits <=26){
-                dp[i] += dp[i-2];
-            }
-        }
-        return dp[n];
-        
+    int maxProduct(vector<int>& A) {
+    int n = A.size();
+    double ans = INT_MIN;
+    double pr = 1, su = 1;
+    for (int i=0; i<n; ++i) {
+      pr *= A[i];
+      su *= A[n-1-i];
+      ans = max({ans, pr, su});
+      if (pr == 0) pr = 1;
+      if (su == 0) su = 1;
     }
+    return ans;
+  }
+        
 };
