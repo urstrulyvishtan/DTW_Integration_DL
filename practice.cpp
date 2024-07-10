@@ -6,18 +6,13 @@
 #include<unordered_set>
 class Solution {
 public:
-    int lengthOfLIS(vector<int>& nums) {
-        vector<int> lis;
-        for(const int& num : nums){
-            auto it = lower_bound(lis.begin(), lis.end(), num);
-
-            if(it == lis.end()){
-                lis.push_back(num);
+    int uniquePaths(int m, int n) {
+        vector<int> dp(n, 1);
+         for(int i = 1; i<m; ++i){
+            for(int j = 1; j<n; ++j){
+                dp[j] += dp[j-1];
             }
-            else{
-                *it = num;
-            }
-        }
-        return lis.size();
+         }
+         return dp[n-1];
     }
 };
