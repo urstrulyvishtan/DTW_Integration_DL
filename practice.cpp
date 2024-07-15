@@ -6,21 +6,28 @@
 #include<unordered_set>
 class Solution {
 public:
-    bool ValidSudoku(vector<vector<char>>& board) {
-        std::vector<std::unordered_set<char>> rows(9), cols(9), boxes(9);
-    for (int i = 0; i < 9; ++i) {
-        for (int j = 0; j < 9; ++j) {
-            char num = board[i][j];
-            if (num != '.') {
-                if (rows[i].count(num) || cols[j].count(num) || boxes[(i/3) * 3 + j/3].count(num)) {
-                    return false;
+    int trap(vector<int>& height) {
+        int left = 0, right = height.size() - 1;
+        int left_max = 0, right_max = 0;
+        int water_trapped = 0;
+        while(left<right){
+            if(height[left] < height[right]){
+                if(height[left] >= left_max){
+                    left_max = height[left];
+                }else{
+                    water_trapped += left_max - height[left];                
                 }
-                rows[i].insert(num);
-                cols[j].insert(num);
-                boxes[(i/3) * 3 + j/3].insert(num);
+                ++left;
+            }else{
+                if(height[right] >= right_max){
+                    right_max = height[right];
+                }else{
+                    water_trapped += right_max - height[right];
+                }
+                --right;
+
             }
         }
+        return water_trapped;
     }
-    return true;
-}
 };
