@@ -1,6 +1,8 @@
 #include <ATen/Aten.h>
 #include <ATen/cuda/CUDAContext.h>
 #include <THC/THCAtomics.cuh>
+#include <ATen/native/cuda/DTW.cuh>
+#include <cuda_runtime.h>
 
 namespace at{
     namespace native{
