@@ -9,7 +9,7 @@ namespace at{
         }
 
         Tensor dtw_backward_cuda(const Tensor& grad_output, const Tensor& D, const Tensor& R){
-            
+
         }
     }
 }

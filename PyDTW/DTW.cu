@@ -63,7 +63,7 @@ namespace at{
             }
         }
         //Function to launch the forward DTW CUDA kernel
-        Tensor dtw_forward(const Tensor& D){
+        Tensor dtw_forward_cuda(const Tensor& D){
             auto D_ = D.continous(); //Ensure contiguous memory layout
             auto dev = D.device().index(); //get device index
             auto dtype = D.scalar_type(); //get data type
