@@ -4,47 +4,30 @@
 #include <algorithm>
 #include<unordered_map>
 #include<unordered_set>
-class MinStack {
-    private:
-        stack<int> mainStack;
-        stack<int> minStack;
+class Solution {
 public:
-    MinStack() {
-        minStack.push(INT_MAX);
-    }
-    
-    void push(int val) {
-        mainStack.push(val);
-        if(val<=minStack.top()){
-            minStack.push(val);
+    int evalRPN(vector<string>& tokens) {
+        stack<int> stk;
+        for(const string& token:tokens){
+            if(isOperand(token)){
+                stk.push(stoi(token));
+            }else{
+                int right = stk.top(); stk.pop();
+                int left = stk.top(); stk.pop();
+                stk.push(performOperation(left, right, token));
+            }
         }
+        return stk.top();
     }
-    
-    void pop() {
-        if(mainStack.empty()) return;
-        int top = mainStack.top();
-        mainStack.pop();
-        if(top == minStack.top()){
-            minStack.pop();
-        }
+    private:
+    bool isOperand(const string& token){
+        return !token.empty() && (isdigit(token[0]) || (token.size()>1 && token[0] == '-' && isdigit(token[1])));
     }
-    
-    int top() {
-        if(mainStack.empty()) throw runtime_error("Stack is empty");
-        return mainStack.top();
-    }
-    
-    int getMin() {
-        if(minStack.empty()) throw runtime_error("Stack is empty");
-        return minStack.top();
+    int performOperation(int left, int right, const string& op){
+        if(op == "+") return left+right;
+        if(op == "-") return left-right;
+        if(op == "*") return left*right;
+        if(op == "/") return left/right;
+        throw invalid_argument("Invalid operator");
     }
 };
-
-/**
- * Your MinStack object will be instantiated and called as such:
- * MinStack* obj = new MinStack();
- * obj->push(val);
- * obj->pop();
- * int param_3 = obj->top();
- * int param_4 = obj->getMin();
- */
