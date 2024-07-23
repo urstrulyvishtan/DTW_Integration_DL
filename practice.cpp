@@ -6,24 +6,27 @@
 #include<unordered_set>
 class Solution {
 public:
-    int carFleet(int target, vector<int>& position, vector<int>& speed) {
-        int n = position.size();
-        vector<pair<double, int>> cars(n);
-        for(int i = 0; i<n; ++i){
-            double time = (double)(target-position[i]) / speed[i];
-            cars[i] = {time, position[i]};
-        }
-        sort(cars.begin(), cars.end(), [](const pair<double, int>& a, const pair<double, int>& b){
-            return a.second>b.second;
-        });
-        int fleets = 0;
-        double currentFleetTime = 0;
-        for(const auto& car:cars){
-            if(car.first>currentFleetTime){
-                ++fleets;
-                currentFleetTime = car.first;
+    int largestRectangleArea(vector<int>& heights) {
+        stack<int> stk;
+        int maxArea = 0;
+        int index = 0;
+
+        while(index<heights.size()){
+            if(stk.empty() || heights[index] >= heights[stk.top()]){
+                stk.push(index++);
+            }else{
+                int topOfStack = stk.top();
+                stk.pop();
+                int area = heights[topOfStack] *(stk.empty() ? index: index - stk.top() - 1);
+                maxArea = max(maxArea, area);
             }
         }
-        return fleets;
+        while(!stk.empty()){
+            int topOfStack = stk.top();
+            stk.pop();
+            int area = heights[topOfStack] * (stk.empty() ? index : index - stk.top() - 1);
+            maxArea = max(maxArea, area);
+        }
+        return maxArea;
     }
 };
