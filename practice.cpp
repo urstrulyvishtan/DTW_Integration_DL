@@ -4,26 +4,39 @@
 #include <algorithm>
 #include<unordered_map>
 #include<unordered_set>
-class Solution {
+class TimeMap {
+private:
+unordered_map<string, vector<pair<int, string>>> store;
 public:
-    int minEatingSpeed(vector<int>& piles, int h) {
-        int low = 1;
-        int high = *max_element(piles.begin(), piles.end());
-        while(low<high){
-            int mid = low + (high-low)/2;
-            if(canFinish(piles, mid, h)){
-                high = mid;
-            } else{
+    
+    void set(string key, string value, int timestamp) {
+       store[key].emplace_back(timestamp, value); 
+    }
+    
+    string get(string key, int timestamp) {
+        if(store.find(key) == store.end()){
+            return "";
+        }
+        const auto& values = store[key];
+        int low = 0, high = values.size() - 1;
+        while(low<=high){
+            int mid = low +(high-low)/2;
+            if(values[mid].first == timestamp){
+                return values[mid].second;
+            }
+            else if(values[mid].first<timestamp){
                 low = mid+1;
+            }else{
+                high = mid - 1;
             }
         }
-        return low;
-    }
-    bool canFinish(const vector<int>& piles, int k, int h){
-        int hours = 0;
-        for(int pile:piles){
-            hours+=ceil((double)pile/k);
-        }
-        return hours<=h;
+        return (high>=0) ? values[high].second : "";
     }
 };
+
+/**
+ * Your TimeMap object will be instantiated and called as such:
+ * TimeMap* obj = new TimeMap();
+ * obj->set(key,value,timestamp);
+ * string param_2 = obj->get(key,timestamp);
+ */
