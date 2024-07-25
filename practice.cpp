@@ -4,39 +4,39 @@
 #include <algorithm>
 #include<unordered_map>
 #include<unordered_set>
-class TimeMap {
-private:
-unordered_map<string, vector<pair<int, string>>> store;
+class Solution {
 public:
-    
-    void set(string key, string value, int timestamp) {
-       store[key].emplace_back(timestamp, value); 
-    }
-    
-    string get(string key, int timestamp) {
-        if(store.find(key) == store.end()){
-            return "";
+    double findMedianSortedArrays(vector<int>& nums1, vector<int>& nums2) {
+        if (nums1.size() > nums2.size()) {
+            return findMedianSortedArrays(nums2, nums1);
         }
-        const auto& values = store[key];
-        int low = 0, high = values.size() - 1;
-        while(low<=high){
-            int mid = low +(high-low)/2;
-            if(values[mid].first == timestamp){
-                return values[mid].second;
-            }
-            else if(values[mid].first<timestamp){
-                low = mid+1;
-            }else{
-                high = mid - 1;
+
+        int m = nums1.size();
+        int n = nums2.size();
+        int low = 0, high = m;
+        
+        while (low <= high) {
+            int partitionX = (low + high) / 2;
+            int partitionY = (m + n + 1) / 2 - partitionX;
+
+            int maxX = (partitionX == 0) ? INT_MIN : nums1[partitionX - 1];
+            int minX = (partitionX == m) ? INT_MAX : nums1[partitionX];
+            int maxY = (partitionY == 0) ? INT_MIN : nums2[partitionY - 1];
+            int minY = (partitionY == n) ? INT_MAX : nums2[partitionY];
+
+            if (maxX <= minY && maxY <= minX) {
+                if ((m + n) % 2 == 0) {
+                    return (double)(max(maxX, maxY) + min(minX, minY)) / 2;
+                } else {
+                    return (double)max(maxX, maxY);
+                }
+            } else if (maxX > minY) {
+                high = partitionX - 1;
+            } else {
+                low = partitionX + 1;
             }
         }
-        return (high>=0) ? values[high].second : "";
+
+        throw invalid_argument("Input arrays are not sorted");
     }
 };
-
-/**
- * Your TimeMap object will be instantiated and called as such:
- * TimeMap* obj = new TimeMap();
- * obj->set(key,value,timestamp);
- * string param_2 = obj->get(key,timestamp);
- */
