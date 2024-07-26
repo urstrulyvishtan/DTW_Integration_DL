@@ -4,38 +4,35 @@
 #include <algorithm>
 #include<unordered_map>
 #include<unordered_set>
-/*
-// Definition for a Node.
-class Node {
-public:
-    int val;
-    Node* next;
-    Node* random;
-    
-    Node(int _val) {
-        val = _val;
-        next = NULL;
-        random = NULL;
-    }
-};
-*/
-
+/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     ListNode *next;
+ *     ListNode() : val(0), next(nullptr) {}
+ *     ListNode(int x) : val(x), next(nullptr) {}
+ *     ListNode(int x, ListNode *next) : val(x), next(next) {}
+ * };
+ */
 class Solution {
 public:
-    Node* copyRandomList(Node* head) {
-        if(!head) return nullptr;
-        std::unordered_map<Node*, Node*> nodeMap;
-        Node* curr = head;
-        while(curr){
-            nodeMap[curr] = new Node(curr->val);
-            curr = curr->next;
+    ListNode* addTwoNumbers(ListNode* l1, ListNode* l2) {
+        ListNode* dummyHead = new ListNode(0);
+        ListNode* p = l1, *q = l2, *current = dummyHead;
+        int carry = 0;
+        while(p != nullptr||q!=nullptr){
+            int x = (p!=nullptr)?p->val:0;
+            int y = (q!=nullptr)?q->val:0;
+            int sum = carry + x + y;
+            carry = sum/10;
+            current->next = new ListNode(sum%10);
+            current = current->next;
+            if(p!=nullptr) p = p->next;
+            if(q!=nullptr) q = q->next;
         }
-        curr = head;
-        while(curr){
-            nodeMap[curr]->next = nodeMap[curr->next];
-            nodeMap[curr]->random = nodeMap[curr->random];
-            curr = curr->next;
+        if(carry>0){
+            current->next = new ListNode(carry);
         }
-        return nodeMap[head];
+        return dummyHead->next;
     }
 };
