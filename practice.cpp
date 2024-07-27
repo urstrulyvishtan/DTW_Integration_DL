@@ -39,19 +39,25 @@
  */
 class Solution {
 public:
-    bool isBalanced(TreeNode* root) {
-        return checkHeight(root) != -1;
-    }
-private:
-    int checkHeight(TreeNode* node){
-        if(!node) return 0;
+    vector<int> rightSideView(TreeNode* root) {
+        std::vector<int> rightView;
+        if(!root) return rightView;
 
-        int leftHeight = checkHeight(node->left);
-        if(leftHeight == -1) return -1;
-        int rightHeight = checkHeight(node->right);
-        if(rightHeight == -1) return -1;
+        std::queue<TreeNode*> q;
+        q.push(root);
+        while(!q.empty()){
+            int levelSize = q.size();
+            for(int i = 0; i<levelSize; ++i){
+                TreeNode* node = q.front();
+                q.pop();
 
-        if(std::abs(leftHeight - rightHeight)>1) return -1;
-        return 1+std::max(leftHeight, rightHeight);
+                if(i == levelSize - 1){
+                    rightView.push_back(node->val);
+                }
+                if(node->left) q.push(node->left);
+                if(node->right) q.push(node->right);
+            }
+        }
+        return rightView;
     }
 };
