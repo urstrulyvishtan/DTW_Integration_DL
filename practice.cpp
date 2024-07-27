@@ -39,25 +39,19 @@
  */
 class Solution {
 public:
-    vector<int> rightSideView(TreeNode* root) {
-        std::vector<int> rightView;
-        if(!root) return rightView;
-
-        std::queue<TreeNode*> q;
-        q.push(root);
-        while(!q.empty()){
-            int levelSize = q.size();
-            for(int i = 0; i<levelSize; ++i){
-                TreeNode* node = q.front();
-                q.pop();
-
-                if(i == levelSize - 1){
-                    rightView.push_back(node->val);
-                }
-                if(node->left) q.push(node->left);
-                if(node->right) q.push(node->right);
-            }
+    int goodNodes(TreeNode* root) {
+        return countGoodNodes(root, INT_MIN);
+    }
+private:
+    int countGoodNodes(TreeNode* node, int maxSoFar){
+        if(!node) return 0;
+        int count = 0;
+        if(node->val >= maxSoFar){
+            count = 1;
+            maxSoFar = node->val;
         }
-        return rightView;
+        count += countGoodNodes(node->left, maxSoFar);
+        count += countGoodNodes(node->right, maxSoFar);
+        return count;
     }
 };
