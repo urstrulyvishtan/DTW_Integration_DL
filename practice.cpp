@@ -26,33 +26,32 @@
     }
     return prev;
  }
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode() : val(0), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
+ * };
+ */
 class Solution {
 public:
-    ListNode* reverseKGroup(ListNode* head, int k) {
-        if(!head || k == 1) return head;
-        ListNode* dummy = new ListNode(0);
-        dummy->next = head;
-        ListNode* curr = head;
-        ListNode* prev = dummy;
-        ListNode* next = nullptr;
+    int diameterOfBinaryTree(TreeNode* root) {
+        int diameter = 0;
+        height(root, diameter);
+        return diameter;
+    }
+private:
+    int height(TreeNode* node, int& diameter){
+        if(!node) return 0;
 
-        int count = 0;
-        while(curr){
-            count++;
-            curr = curr->next;
-        }
-        while(count>=k){
-            curr = prev->next;
-            next = curr->next;
-            for(int i = 1; i<k; ++i){
-                curr -> next = next -> next;
-                next -> next = prev -> next;
-                prev -> next = next;
-                next = curr -> next;
-            }
-            prev = curr;
-            count -= k;
-        }
-        return dummy->next;
+        int leftHeight = height(node->left, diameter);
+        int rightHeight = height(node->right, diameter);
+
+        diameter = std::max(diameter, leftHeight + rightHeight);
+        return 1 + std::max(leftHeight, rightHeight);
     }
 };
