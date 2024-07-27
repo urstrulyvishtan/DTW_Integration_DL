@@ -39,19 +39,19 @@
  */
 class Solution {
 public:
-    int diameterOfBinaryTree(TreeNode* root) {
-        int diameter = 0;
-        height(root, diameter);
-        return diameter;
+    bool isBalanced(TreeNode* root) {
+        return checkHeight(root) != -1;
     }
 private:
-    int height(TreeNode* node, int& diameter){
+    int checkHeight(TreeNode* node){
         if(!node) return 0;
 
-        int leftHeight = height(node->left, diameter);
-        int rightHeight = height(node->right, diameter);
+        int leftHeight = checkHeight(node->left);
+        if(leftHeight == -1) return -1;
+        int rightHeight = checkHeight(node->right);
+        if(rightHeight == -1) return -1;
 
-        diameter = std::max(diameter, leftHeight + rightHeight);
-        return 1 + std::max(leftHeight, rightHeight);
+        if(std::abs(leftHeight - rightHeight)>1) return -1;
+        return 1+std::max(leftHeight, rightHeight);
     }
 };
