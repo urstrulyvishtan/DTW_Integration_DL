@@ -6,16 +6,22 @@
 #include<unordered_set>
 class Solution {
 public:
-    int lastStoneWeight(vector<int>& stones) {
-        std::priority_queue<int> maxHeap(stones.begin(), stones.end());
-        while(maxHeap.size() > 1){
-            int first = maxHeap.top(); maxHeap.pop();
-            int second = maxHeap.top(); maxHeap.pop();
-
-            if(first!=second){
-                maxHeap.push(first - second);
+    vector<vector<int>> kClosest(vector<vector<int>>& points, int k) {
+        priority_queue<pair<int, vector<int>>> maxHeap;
+        for(const auto& point:points){
+            int x = point[0];
+            int y = point[1];
+            int distance = x*x + y*y;
+            maxHeap.push({distance, point});
+            if(maxHeap.size()>k){
+                maxHeap.pop();
             }
         }
-        return maxHeap.empty() ? 0:maxHeap.top();
+        vector<vector<int>> result;
+        while(!maxHeap.empty()){
+            result.push_back(maxHeap.top().second);
+            maxHeap.pop();
+        }
+        return result;
     }
 };
