@@ -6,22 +6,14 @@
 #include<unordered_set>
 class Solution {
 public:
-    vector<vector<int>> kClosest(vector<vector<int>>& points, int k) {
-        priority_queue<pair<int, vector<int>>> maxHeap;
-        for(const auto& point:points){
-            int x = point[0];
-            int y = point[1];
-            int distance = x*x + y*y;
-            maxHeap.push({distance, point});
-            if(maxHeap.size()>k){
-                maxHeap.pop();
+    int findKthLargest(vector<int>& nums, int k) {
+        std::priority_queue<int, std::vector<int>, std::greater<int>> minHeap;
+        for(int num : nums){
+            minHeap.push(num);
+            if(minHeap.size()>k){
+                minHeap.pop();
             }
         }
-        vector<vector<int>> result;
-        while(!maxHeap.empty()){
-            result.push_back(maxHeap.top().second);
-            maxHeap.pop();
-        }
-        return result;
+        return minHeap.top();
     }
 };
