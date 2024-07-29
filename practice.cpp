@@ -4,32 +4,18 @@
 #include <algorithm>
 #include<unordered_map>
 #include<unordered_set>
-class KthLargest {
+class Solution {
 public:
-    KthLargest(int k, vector<int>& nums) : k(k){
-        for(int num : nums){
-            add(num);
-        }
-    }
-    
-    int add(int val) {
-        if(minHeap.size() < k){
-            minHeap.push(val);
-        } else if(val>minHeap.top()){
-            minHeap.push(val);
-            if(minHeap.size()>k){
-                minHeap.pop();
+    int lastStoneWeight(vector<int>& stones) {
+        std::priority_queue<int> maxHeap(stones.begin(), stones.end());
+        while(maxHeap.size() > 1){
+            int first = maxHeap.top(); maxHeap.pop();
+            int second = maxHeap.top(); maxHeap.pop();
+
+            if(first!=second){
+                maxHeap.push(first - second);
             }
         }
-        return minHeap.top();
+        return maxHeap.empty() ? 0:maxHeap.top();
     }
-private:
-    std::priority_queue<int, std::vector<int>, std::greater<int>> minHeap;
-    int k;
 };
-
-/**
- * Your KthLargest object will be instantiated and called as such:
- * KthLargest* obj = new KthLargest(k, nums);
- * int param_1 = obj->add(val);
- */
