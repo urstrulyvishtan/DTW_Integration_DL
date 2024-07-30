@@ -6,16 +6,22 @@
 #include<unordered_set>
 class Solution {
 public:
-    int minCostClimbingStairs(vector<int>& cost) {
-        int n = cost.size();
-        if(n==0) return 0;
-        if(n==1) return cost[0];
-        vector<int> dp(n+1, 0);
-        dp[0] = cost[0];
-        dp[1] = cost[1];
-        for(int i = 2; i<n; ++i){
-            dp[i] = cost[i] + min(dp[i-1], dp[i-2]);
+    bool canPartition(vector<int>& nums) {
+        int totalSum = 0;
+        for(int num:nums){
+            totalSum+=num;
         }
-        return min(dp[n-1], dp[n-2]);
+        if(totalSum%2 != 0){
+            return false;
+        }
+        int target = totalSum/2;
+        vector<bool> dp(target+1, false);
+        dp[0] = true;
+        for(int num:nums){
+            for(int j = target; j>=num;--j){
+                dp[j] = dp[j] || dp[j-num];
+            }
+        }
+        return dp[target];
     }
 };
