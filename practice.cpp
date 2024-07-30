@@ -4,63 +4,18 @@
 #include <algorithm>
 #include<unordered_map>
 #include<unordered_set>
-class Twitter {
-private:
-struct Tweet{
-    int id;
-    int timestamp;
-    Tweet(int tweetId, int time) : id(tweetId), timestamp(time){}
-};
-int time;
-unordered_map<int, vector<Tweet>> userTweets;
-unordered_map<int, unordered_set<int>> followers;
+class Solution {
 public:
-    Twitter() : time(0){
-        
-    }
-    
-    void postTweet(int userId, int tweetId) {
-        userTweets[userId].emplace_back(tweetId, time++);
-    }
-    
-    vector<int> getNewsFeed(int userId) {
-        vector<int> result;
-        priority_queue<pair<int, int>> maxHeap;
-        for(auto& tweet : userTweets[userId]){
-            maxHeap.push({tweet.timestamp, tweet.id});
+    int minCostClimbingStairs(vector<int>& cost) {
+        int n = cost.size();
+        if(n==0) return 0;
+        if(n==1) return cost[0];
+        vector<int> dp(n+1, 0);
+        dp[0] = cost[0];
+        dp[1] = cost[1];
+        for(int i = 2; i<n; ++i){
+            dp[i] = cost[i] + min(dp[i-1], dp[i-2]);
         }
-        for(auto& followeeId : followers[userId]){
-            for(auto& tweet : userTweets[followeeId]){
-                maxHeap.push({tweet.timestamp, tweet.id});
-            }
-        }
-        int count = 0;
-        while(!maxHeap.empty() && count<10){
-            result.push_back(maxHeap.top().second);
-            maxHeap.pop();
-            count++;
-        }
-        return result;
-    }
-    
-    void follow(int followerId, int followeeId) {
-        if(followerId != followeeId){
-            followers[followerId].insert(followeeId);
-        }
-    }
-    
-    void unfollow(int followerId, int followeeId) {
-        if(followerId != followeeId){
-            followers[followerId].erase(followeeId);
-        }   
+        return min(dp[n-1], dp[n-2]);
     }
 };
-
-/**
- * Your Twitter object will be instantiated and called as such:
- * Twitter* obj = new Twitter();
- * obj->postTweet(userId,tweetId);
- * vector<int> param_2 = obj->getNewsFeed(userId);
- * obj->follow(followerId,followeeId);
- * obj->unfollow(followerId,followeeId);
- */
