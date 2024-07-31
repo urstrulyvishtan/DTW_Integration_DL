@@ -6,22 +6,22 @@
 #include<unordered_set>
 class Solution {
 public:
-    bool canPartition(vector<int>& nums) {
-        int totalSum = 0;
-        for(int num:nums){
-            totalSum+=num;
+    vector<vector<int>> merge(vector<vector<int>>& intervals) {
+        if(intervals.empty()){
+            return {};        }
+    
+    sort(intervals.begin(), intervals.end(), [](const vector<int>& a, const vector<int>& b){
+        return a[0]<b[0];
+    });
+    vector<vector<int>> mergedIntervals;
+    mergedIntervals.push_back(intervals[0]);
+    for(const auto& interval:intervals){
+        if(interval[0]<=mergedIntervals.back()[1]){
+            mergedIntervals.back()[1] = max(mergedIntervals.back()[1], interval[1]);
+        }else{
+            mergedIntervals.push_back(interval);
         }
-        if(totalSum%2 != 0){
-            return false;
-        }
-        int target = totalSum/2;
-        vector<bool> dp(target+1, false);
-        dp[0] = true;
-        for(int num:nums){
-            for(int j = target; j>=num;--j){
-                dp[j] = dp[j] || dp[j-num];
-            }
-        }
-        return dp[target];
+    }
+    return mergedIntervals;
     }
 };
