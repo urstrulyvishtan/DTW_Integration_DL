@@ -6,34 +6,23 @@
 #include<unordered_set>
 class Solution {
 public:
-    int minMeetingRooms(vector<Interval>& intervals) {
-        if (intervals.empty()) {
-            return 0;
-        }
-
-        vector<int> startTimes, endTimes;
-        for (const auto& interval : intervals) {
-            startTimes.push_back(interval.start);
-            endTimes.push_back(interval.end);
-        }
-
-        sort(startTimes.begin(), startTimes.end());
-        sort(endTimes.begin(), endTimes.end());
-
-        int startPointer = 0, endPointer = 0;
-        int roomsNeeded = 0, maxRooms = 0;
-
-        while (startPointer < startTimes.size()) {
-            if (startTimes[startPointer] < endTimes[endPointer]) {
-                roomsNeeded++;
-                startPointer++;
-            } else {
-                roomsNeeded--;
-                endPointer++;
+    void rotate(vector<vector<int>>& matrix) {
+        int n = matrix.size();
+        for(int i = 0; i<n; ++i){
+            for(int j = i+1; j<n; ++j){
+                swap(matrix[i][j], matrix[j][i]);
             }
-            maxRooms = max(maxRooms, roomsNeeded);
         }
-        
-        return maxRooms;
+        for(int i = 0; i<n; ++i){
+            reverse(matrix[i].begin(), matrix[i].end());
+        }
+    }
+    void printMatrix(const vector<vector<int>>& matrix){
+        for(const auto& row:matrix){
+            for(int val:row){
+                cout<<val<<" ";
+            }
+            cout<<endl;
+        }
     }
 };
