@@ -6,46 +6,58 @@
 #include<unordered_set>
 class Solution {
 public:
-    vector<int> spiralOrder(vector<vector<int>>& matrix) {
-        vector<int> result;
-        
-        if (matrix.empty()) return result;
-        
+    void setZeroes(vector<vector<int>>& matrix) {
         int m = matrix.size();
         int n = matrix[0].size();
-        int left = 0, right = n - 1;
-        int top = 0, bottom = m - 1;
+        bool firstRowZero = false, firstColZero = false;
 
-        while (left <= right && top <= bottom) {
-            // Traverse from left to right along the top boundary
-            for (int i = left; i <= right; ++i) {
-                result.push_back(matrix[top][i]);
-            }
-            top++;
-            
-            // Traverse from top to bottom along the right boundary
-            for (int i = top; i <= bottom; ++i) {
-                result.push_back(matrix[i][right]);
-            }
-            right--;
-            
-            // Traverse from right to left along the bottom boundary
-            if (top <= bottom) {
-                for (int i = right; i >= left; --i) {
-                    result.push_back(matrix[bottom][i]);
-                }
-                bottom--;
-            }
-            
-            // Traverse from bottom to top along the left boundary
-            if (left <= right) {
-                for (int i = bottom; i >= top; --i) {
-                    result.push_back(matrix[i][left]);
-                }
-                left++;
+        // Check if the first row needs to be zeroed
+        for (int j = 0; j < n; ++j) {
+            if (matrix[0][j] == 0) {
+                firstRowZero = true;
+                break;
             }
         }
-        
-        return result;
+
+        // Check if the first column needs to be zeroed
+        for (int i = 0; i < m; ++i) {
+            if (matrix[i][0] == 0) {
+                firstColZero = true;
+                break;
+            }
+        }
+
+        // Use the first row and column to mark zeros
+        for (int i = 1; i < m; ++i) {
+            for (int j = 1; j < n; ++j) {
+                if (matrix[i][j] == 0) {
+                    matrix[i][0] = 0;
+                    matrix[0][j] = 0;
+                }
+            }
+        }
+
+        // Zero out cells based on the markers in the first row and column
+        for (int i = 1; i < m; ++i) {
+            for (int j = 1; j < n; ++j) {
+                if (matrix[i][0] == 0 || matrix[0][j] == 0) {
+                    matrix[i][j] = 0;
+                }
+            }
+        }
+
+        // Zero out the first row if needed
+        if (firstRowZero) {
+            for (int j = 0; j < n; ++j) {
+                matrix[0][j] = 0;
+            }
+        }
+
+        // Zero out the first column if needed
+        if (firstColZero) {
+            for (int i = 0; i < m; ++i) {
+                matrix[i][0] = 0;
+            }
+        }
     }
 };
