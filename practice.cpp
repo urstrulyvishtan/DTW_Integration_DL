@@ -6,13 +6,12 @@
 #include<unordered_set>
 class Solution {
 public:
-    int missingNumber(vector<int>& nums) {
-        int n = nums.size();
-        int expectedSum = n*(n+1)/2;
-        int actualSum = 0;
-        for(int num:nums){
-            actualSum+=num;
+    int getSum(int a, int b) {
+        while(b!=0){
+            unsigned carry = a&b;
+            a = a^b;
+            b = carry<<1;
         }
-        return expectedSum - actualSum;
+        return a;
     }
 };
