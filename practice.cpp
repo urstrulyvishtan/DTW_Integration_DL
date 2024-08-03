@@ -6,12 +6,12 @@
 #include<unordered_set>
 class Solution {
 public:
-    int hammingWeight(int n) {
-        int count = 0;
-        while(n!=0){
-            count+=n&1;
-            n>>=1;
+    vector<int> countBits(int n) {
+        vector<int> result(n+1, 0);
+
+        for(int i = 1; i<=n; ++i){
+            result[i] = result[i>>1]+(i&1);
         }
-        return count;
+        return result;
     }
 };
