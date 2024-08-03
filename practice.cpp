@@ -6,12 +6,12 @@
 #include<unordered_set>
 class Solution {
 public:
-    vector<int> countBits(int n) {
-        vector<int> result(n+1, 0);
-
-        for(int i = 1; i<=n; ++i){
-            result[i] = result[i>>1]+(i&1);
+    uint32_t reverseBits(uint32_t n) {
+        uint32_t reversed = 0;
+        for(int i = 0; i<32; ++i){
+            reversed = (reversed<<1)|(n&1);
+            n>>=1;
         }
-        return result;
+        return reversed;
     }
 };
