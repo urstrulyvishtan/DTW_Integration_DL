@@ -6,12 +6,11 @@
 #include<unordered_set>
 class Solution {
 public:
-    int getSum(int a, int b) {
-        while(b!=0){
-            unsigned carry = a&b;
-            a = a^b;
-            b = carry<<1;
+    int singleNumber(vector<int>& nums) {
+        int result = 0;
+        for(int num:nums){
+            result ^=num;
         }
-        return a;
+        return result;
     }
 };
