@@ -6,11 +6,15 @@
 #include<unordered_set>
 class Solution {
 public:
-    int singleNumber(vector<int>& nums) {
-        int result = 0;
-        for(int num:nums){
-            result ^=num;
+    int reverse(int x) {
+        int reversed = 0;
+        while(x!=0){
+            int pop = x%10;
+            x/=10;
+            if(reversed>INT_MAX/10||(reversed == INT_MAX/10 && pop>7)) return 0;
+            if(reversed<INT_MIN/10||(reversed == INT_MIN/10 && pop<-8)) return 0;
+            reversed = reversed * 10 + pop;
         }
-        return result;
+        return reversed;
     }
 };
