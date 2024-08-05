@@ -6,15 +6,50 @@
 #include<unordered_set>
 class Solution {
 public:
-    int reverse(int x) {
-        int reversed = 0;
-        while(x!=0){
-            int pop = x%10;
-            x/=10;
-            if(reversed>INT_MAX/10||(reversed == INT_MAX/10 && pop>7)) return 0;
-            if(reversed<INT_MIN/10||(reversed == INT_MIN/10 && pop<-8)) return 0;
-            reversed = reversed * 10 + pop;
+    vector<int> minInterval(vector<vector<int>>& intervals, vector<int>& queries) {
+         // Sort intervals by start time
+        sort(intervals.begin(), intervals.end());
+        
+        // Create a vector of pairs to store queries and their original indices
+        vector<pair<int, int>> queriesWithIndices;
+        for (int i = 0; i < queries.size(); ++i) {
+            queriesWithIndices.push_back({queries[i], i});
         }
-        return reversed;
+        
+        // Sort queries by value
+        sort(queriesWithIndices.begin(), queriesWithIndices.end());
+        
+        // Min-heap to store intervals by size
+        priority_queue<pair<int, int>, vector<pair<int, int>>, greater<pair<int, int>>> minHeap;
+        
+        vector<int> result(queries.size(), -1);
+        int i = 0;
+        
+        // Iterate over each query
+        for (auto& query : queriesWithIndices) {
+            int q = query.first;
+            int idx = query.second;
+            
+            // Add all intervals that start before or at the current query point
+            while (i < intervals.size() && intervals[i][0] <= q) {
+                int start = intervals[i][0];
+                int end = intervals[i][1];
+                int size = end - start + 1;
+                minHeap.push({size, end});
+                ++i;
+            }
+            
+            // Remove all intervals from the heap that end before the current query point
+            while (!minHeap.empty() && minHeap.top().second < q) {
+                minHeap.pop();
+            }
+            
+            // If the heap is not empty, the top element is the smallest interval containing the query
+            if (!minHeap.empty()) {
+                result[idx] = minHeap.top().first;
+            }
+        }
+        
+        return result;
     }
 };
