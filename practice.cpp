@@ -6,21 +6,21 @@
 #include<unordered_set>
 class Solution {
 public:
-    vector<vector<int>> permute(vector<int>& nums) {
+    vector<vector<int>> subsetsWithDup(vector<int>& nums) {
         vector<vector<int>> result;
-        backtrack(nums, 0, result);
+        vector<int> subset;
+        sort(nums.begin(), nums.end());
+        backtrack(nums, 0, subset, result);
         return result;
     }
 private:
-    void backtrack(vector<int>& nums, int start, vector<vector<int>>& result){
-        if(start == nums.size()){
-            result.push_back(nums);
-            return;
-        }
+    void backtrack(vector<int>& nums, int start, vector<int>& subset, vector<vector<int>>& result){
+        result.push_back(subset);
         for(int i = start; i<nums.size(); ++i){
-            swap(nums[start], nums[i]);
-            backtrack(nums, start+1, result);
-            swap(nums[start], nums[i]);
+            if(i>start && nums[i]==nums[i-1]) continue;
+            subset.push_back(nums[i]);
+            backtrack(nums, i+1, subset, result);
+            subset.pop_back();
         }
     }
 };
