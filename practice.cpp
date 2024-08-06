@@ -6,30 +6,47 @@
 #include<unordered_set>
 class Solution {
 public:
-    vector<string> letterCombinations(string digits) {
-        if(digits.empty()) return {};
-        vector<string> result;
-        string currentCombination;
-        unordered_map<char, string> digitToChar = {
-            {'2', "abc"}, {'3', "def"}, {'4', "ghi"},
-            {'5', "jkl"}, {'6', "mno"}, {'7', "pqrs"},
-            {'8', "tuv"}, {'9', "wxyz"}
-        };
-        backtrack(digits, 0, currentCombination, result, digitToChar);
+    vector<vector<string>> solveNQueens(int n) {
+        vector<vector<string>> result;
+        vector<string> board(n, string(n, '.')); // Create an empty board
+        backtrack(result, board, 0, n);
         return result;
     }
+
 private:
-    void backtrack(const string& digits, int index, string& currentCombination, vector<string>& result, const unordered_map<char, string>& digitToChar){
-        if(index == digits.size()){
-            result.push_back(currentCombination);
+    void backtrack(vector<vector<string>>& result, vector<string>& board, int row, int n) {
+        if (row == n) {
+            result.push_back(board);
             return;
         }
-        char digit = digits[index];
-        const string& letters = digitToChar.at(digit);
-        for(char letter:letters){
-            currentCombination.push_back(letter);
-            backtrack(digits, index+1, currentCombination, result, digitToChar);
-            currentCombination.pop_back();
+        for (int col = 0; col < n; ++col) {
+            if (isSafe(board, row, col, n)) {
+                board[row][col] = 'Q'; // Place the queen
+                backtrack(result, board, row + 1, n);
+                board[row][col] = '.'; // Remove the queen (backtrack)
+            }
         }
+    }
+
+    bool isSafe(vector<string>& board, int row, int col, int n) {
+        // Check column
+        for (int i = 0; i < row; ++i) {
+            if (board[i][col] == 'Q') {
+                return false;
+            }
+        }
+        // Check diagonal (top-left to bottom-right)
+        for (int i = row, j = col; i >= 0 && j >= 0; --i, --j) {
+            if (board[i][j] == 'Q') {
+                return false;
+            }
+        }
+        // Check diagonal (top-right to bottom-left)
+        for (int i = row, j = col; i >= 0 && j < n; --i, ++j) {
+            if (board[i][j] == 'Q') {
+                return false;
+            }
+        }
+        return true;
     }
 };
