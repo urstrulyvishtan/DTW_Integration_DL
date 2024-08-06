@@ -6,25 +6,34 @@
 #include<unordered_set>
 class Solution {
 public:
-    vector<vector<int>> combinationSum2(vector<int>& candidates, int target) {
-        vector<vector<int>> result;
-        vector<int> combination;
-        sort(candidates.begin(), candidates.end());
-        backtrack(candidates, target, 0, combination, result);
+    vector<vector<string>> partition(string s) {
+        vector<vector<string>> result;
+        vector<string> currentPartition;
+        backtrack(s, 0, currentPartition, result);
         return result;
     }
 private:
-    void backtrack(vector<int>& candidates, int target, int start, vector<int>& combination, vector<vector<int>>& result){
-        if(target == 0){
-            result.push_back(combination);
+    void backtrack(const string& s, int start, vector<string>& currentPartition, vector<vector<string>>& result){
+        if(start == s.length()){
+            result.push_back(currentPartition);
             return;
         }
-        for(int i = start; i<candidates.size(); ++i){
-            if(i>start && candidates[i] == candidates[i-1]) continue;
-            if(candidates[i]>target) break;
-            combination.push_back(candidates[i]);
-            backtrack(candidates, target-candidates[i], i+1, combination, result);
-            combination.pop_back();
+        for(int end = start; end<s.length(); ++end){
+            if(isPalindrome(s, start, end)){
+            currentPartition.push_back(s.substr(start, end-start+1));
+            backtrack(s, end+1, currentPartition, result);
+            currentPartition.pop_back();
         }
+        }
+    }
+    bool isPalindrome(const string& s, int left, int right){
+        while(left<right){
+            if(s[left]!=s[right]){
+                return false;
+            }
+            ++left;
+            --right;
+        }
+        return true;
     }
 };
