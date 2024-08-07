@@ -6,7 +6,7 @@
 #include<unordered_set>
 class Solution {
 public:
-    void islandsAndTreasure(vector<vector<int>>& grid) {
+    void islandsAndTreasure(vector<vector<int>>& rooms) {
         if(rooms.empty()) return;
 
         int m = rooms.size();
