@@ -6,29 +6,33 @@
 #include<unordered_set>
 class Solution {
 public:
-    int maxAreaOfIsland(vector<vector<int>>& grid) {
-        int maxArea = 0;
-        for(int i = 0; i<grid.size(); ++i){
-            for(int j = 0; j<grid[0].size(); ++j){
-                if(grid[i][j] == 1){
-                    int area = dfs(grid, i, j);
-                    maxArea = max(maxArea, area);
+    void islandsAndTreasure(vector<vector<int>>& grid) {
+        if(rooms.empty()) return;
+
+        int m = rooms.size();
+        int n = rooms[0].size();
+        queue<pair<int, int>> q;
+
+        for(int i = 0; i<m; ++i){
+            for(int j = 0; j<n; ++j){
+                if(rooms[i][j] == 0){
+                    q.push({i, j});
                 }
             }
         }
-        return maxArea;
-    }
-private:
-    int dfs(vector<vector<int>>& grid, int i, int j){
-        if(i<0||i>=grid.size()||j<0||j>=grid[0].size()||grid[i][j] == 0){
-            return 0;
+        vector<vector<int>> directions = {{1, 0}, {-1, 0}, {0, 1}, {0, -1}};
+        while(!q.empty()){
+            auto [row, col] = q.front();
+            q.pop();
+            for(const auto& direction:directions){
+                int newRow = row+direction[0];
+                int newCol = col+direction[1];
+                if(newRow<0 ||newRow>=m ||newCol<0 ||newCol>=n ||rooms[newRow][newCol]!=INT_MAX){
+                    continue;
+                }
+                rooms[newRow][newCol] = rooms[row][col] + 1;
+                q.push({newRow, newCol});
+            }
         }
-        grid[i][j] = 0;
-        int area = 1;
-        area += dfs(grid, i+1, j);
-        area += dfs(grid, i-1, j);
-        area += dfs(grid, i, j+1);
-        area += dfs(grid, i, j-1);
-        return area;
     }
 };
