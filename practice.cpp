@@ -6,47 +6,29 @@
 #include<unordered_set>
 class Solution {
 public:
-    vector<vector<string>> solveNQueens(int n) {
-        vector<vector<string>> result;
-        vector<string> board(n, string(n, '.')); // Create an empty board
-        backtrack(result, board, 0, n);
-        return result;
+    int maxAreaOfIsland(vector<vector<int>>& grid) {
+        int maxArea = 0;
+        for(int i = 0; i<grid.size(); ++i){
+            for(int j = 0; j<grid[0].size(); ++j){
+                if(grid[i][j] == 1){
+                    int area = dfs(grid, i, j);
+                    maxArea = max(maxArea, area);
+                }
+            }
+        }
+        return maxArea;
     }
-
 private:
-    void backtrack(vector<vector<string>>& result, vector<string>& board, int row, int n) {
-        if (row == n) {
-            result.push_back(board);
-            return;
+    int dfs(vector<vector<int>>& grid, int i, int j){
+        if(i<0||i>=grid.size()||j<0||j>=grid[0].size()||grid[i][j] == 0){
+            return 0;
         }
-        for (int col = 0; col < n; ++col) {
-            if (isSafe(board, row, col, n)) {
-                board[row][col] = 'Q'; // Place the queen
-                backtrack(result, board, row + 1, n);
-                board[row][col] = '.'; // Remove the queen (backtrack)
-            }
-        }
-    }
-
-    bool isSafe(vector<string>& board, int row, int col, int n) {
-        // Check column
-        for (int i = 0; i < row; ++i) {
-            if (board[i][col] == 'Q') {
-                return false;
-            }
-        }
-        // Check diagonal (top-left to bottom-right)
-        for (int i = row, j = col; i >= 0 && j >= 0; --i, --j) {
-            if (board[i][j] == 'Q') {
-                return false;
-            }
-        }
-        // Check diagonal (top-right to bottom-left)
-        for (int i = row, j = col; i >= 0 && j < n; --i, ++j) {
-            if (board[i][j] == 'Q') {
-                return false;
-            }
-        }
-        return true;
+        grid[i][j] = 0;
+        int area = 1;
+        area += dfs(grid, i+1, j);
+        area += dfs(grid, i-1, j);
+        area += dfs(grid, i, j+1);
+        area += dfs(grid, i, j-1);
+        return area;
     }
 };
