@@ -4,26 +4,39 @@
 #include <algorithm>
 #include<unordered_map>
 #include<unordered_set>
-class Solution {
+class DetectSquares {
 public:
-    string multiply(string num1, string num2) {
-        int m = num1.size();
-        int n = num2.size();
-        vector<int> result(m+n, 0);
-        for(int i = m-1; i>=0; --i){
-            for(int j = n-1; j>=0; --j){
-                int mul = (num1[i] - '0')*(num2[j] - '0');
-                int sum = mul+result[i+j+1];
-                result[i+j+1] = sum%10;
-                result[i+j] += sum/10;
+    unordered_map<int, unordered_map<int, int>> points;
+    DetectSquares() {
+        
+    }
+    
+    void add(vector<int> point) {
+       points[point[0]][point[1]] ++;
+    }
+    
+    int count(vector<int> point) {
+        int x = point[0], y = point[1];
+        int countSquares = 0;
+
+        if(points.find(x) == points.end()) return 0;
+        for(auto & [py, freq] : points[x]){
+            if(py == y) continue;
+            int sideLength = abs(py - y);
+            if(points.find(x+sideLength) != points.end()){
+                countSquares += freq*points[x+sideLength][py]*points[x+sideLength][y];
+            }
+            if(points.find(x-sideLength)!=points.end()){
+                countSquares += freq*points[x-sideLength][py]*points[x-sideLength][y];
             }
         }
-        string product = "";
-        for(int num:result){
-            if(!(product.empty() && num == 0)){
-                product.push_back(num + '0');
-            }
-        }
-        return product.empty() ? "0" : product;
+        return countSquares;
     }
 };
+
+/**
+ * Your DetectSquares object will be instantiated and called as such:
+ * DetectSquares* obj = new DetectSquares();
+ * obj->add(point);
+ * int param_2 = obj->count(point);
+ */
