@@ -6,27 +6,28 @@
 #include<unordered_set>
 class Solution {
 public:
-    int minCostConnectPoints(vector<vector<int>>& points) {
-        int n = points.size();
-        vector<bool> isMST(n, false);
-        priority_queue<pair<int, int>, vector<pair<int, int>>, greater<pair<int, int>>> minHeap;
-        int totalCost = 0;
-        int edgeUsed = 0;
-        minHeap.push({0,0});
-        while(edgeUsed<n){
-            auto[cost, u] = minHeap.top();
-            minHeap.pop();
-            if(isMST[u]) continue;
-            isMST[u] = true;
-            totalCost += cost;
-            edgeUsed++;
-            for(int v = 0; v<n; ++v){
-                if(!isMST[v]){
-                    int distance = abs(points[u][0] - points[v][0]) + abs(points[u][1] - points[v][1]);
-                    minHeap.push({distance, v});
+    int networkDelayTime(vector<vector<int>>& times, int n, int k) {
+        unordered_map<int, vector<pair<int, int>>> graph;
+        for(const auto& time:times){
+            int u = time[0], v = time[1], w = time[2];
+            graph[u].emplace_back(v, w);
+        }
+        vector<int> dist(n+1, INT_MAX);
+        dist[k] = 0;
+        priority_queue<pair<int, int>, vector<pair<int, int>>, greater<>> pq;
+        pq.emplace(0, k);
+        while(!pq.empty()){
+            auto[d, u] = pq.top();
+            pq.pop();
+            if(d>dist[u]) continue;
+            for(const auto& [v, w]:graph[u]){
+                if(dist[u]+w < dist[v]){
+                    dist[v] = dist[u] + w;
+                    pq.emplace(dist[v], v);
                 }
             }
         }
-        return totalCost;
+        int maxTime = *max_element(dist.begin() + 1, dist.end());
+        return maxTime == INT_MAX ? -1:maxTime;
     }
 };
