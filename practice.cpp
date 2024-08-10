@@ -6,28 +6,25 @@
 #include<unordered_set>
 class Solution {
 public:
-    int networkDelayTime(vector<vector<int>>& times, int n, int k) {
-        unordered_map<int, vector<pair<int, int>>> graph;
-        for(const auto& time:times){
-            int u = time[0], v = time[1], w = time[2];
-            graph[u].emplace_back(v, w);
-        }
-        vector<int> dist(n+1, INT_MAX);
-        dist[k] = 0;
-        priority_queue<pair<int, int>, vector<pair<int, int>>, greater<>> pq;
-        pq.emplace(0, k);
+    int swimInWater(vector<vector<int>>& grid) {
+        int n = grid.size();
+        vector<vector<int>> directions = {{0, 1}, {1, 0}, {0, -1}, {-1, 0}};
+        vector<vector<int>> visited(n, vector<int>(n, 0));
+        priority_queue<pair<int, pair<int, int>>, vector<pair<int, pair<int, int>>>, greater<>> pq;
+        pq.push({grid[0][0], {0,0}});
+        visited[0][0] = 1;
         while(!pq.empty()){
-            auto[d, u] = pq.top();
-            pq.pop();
-            if(d>dist[u]) continue;
-            for(const auto& [v, w]:graph[u]){
-                if(dist[u]+w < dist[v]){
-                    dist[v] = dist[u] + w;
-                    pq.emplace(dist[v], v);
+            auto[time, cell] = pq.top(); pq.pop();
+            int x = cell.first, y = cell.second;
+            if(x==n-1&&y==n-1)return time;
+            for(const auto& dir:directions){
+                int nx = x+dir[0], ny = y+dir[1];
+                if(nx>=0&&nx<n&&ny>=0&&ny<n&&!visited[nx][ny]){
+                    visited[nx][ny] = 1;
+                    pq.push({max(time, grid[nx][ny]), {nx, ny}});
                 }
             }
         }
-        int maxTime = *max_element(dist.begin() + 1, dist.end());
-        return maxTime == INT_MAX ? -1:maxTime;
+        return -1;
     }
 };
