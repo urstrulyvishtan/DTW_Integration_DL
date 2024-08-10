@@ -4,39 +4,26 @@
 #include <algorithm>
 #include<unordered_map>
 #include<unordered_set>
-class DetectSquares {
+class Solution {
 public:
-    unordered_map<int, unordered_map<int, int>> points;
-    DetectSquares() {
-        
-    }
-    
-    void add(vector<int> point) {
-       points[point[0]][point[1]] ++;
-    }
-    
-    int count(vector<int> point) {
-        int x = point[0], y = point[1];
-        int countSquares = 0;
-
-        if(points.find(x) == points.end()) return 0;
-        for(auto & [py, freq] : points[x]){
-            if(py == y) continue;
-            int sideLength = abs(py - y);
-            if(points.find(x+sideLength) != points.end()){
-                countSquares += freq*points[x+sideLength][py]*points[x+sideLength][y];
-            }
-            if(points.find(x-sideLength)!=points.end()){
-                countSquares += freq*points[x-sideLength][py]*points[x-sideLength][y];
-            }
+    vector<string> findItinerary(vector<vector<string>>& tickets) {
+        unordered_map<string, priority_queue<string, vector<string>, greater<string>>> adj;
+        vector<string> result;
+        for(auto& ticket:tickets){
+            adj[ticket[0]].push(ticket[1]);
         }
-        return countSquares;
+        dfs("JFK", adj, result);
+        reverse(result.begin(), result.end());
+        return result;
+    }
+private:
+    void dfs(const string& airport, unordered_map<string, priority_queue<string, vector<string>, greater<string>>>& adj, vector<string>& result){
+        auto& destinations = adj[airport];
+        while(!destinations.empty()){
+            string next = destinations.top();
+            destinations.pop();
+            dfs(next, adj, result);
+        }
+        result.push_back(airport);
     }
 };
-
-/**
- * Your DetectSquares object will be instantiated and called as such:
- * DetectSquares* obj = new DetectSquares();
- * obj->add(point);
- * int param_2 = obj->count(point);
- */
