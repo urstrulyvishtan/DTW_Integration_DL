@@ -6,18 +6,14 @@
 #include<unordered_set>
 class Solution {
 public:
-    int maxProfit(vector<int>& prices) {
-        if(prices.empty()) return 0;
-        int n = prices.size();
-        vector<int> buy(n), sell(n), cooldown(n);
-        buy[0] = -prices[0];
-        sell[0] = 0;
-        cooldown[0] = 0;
-        for(int i = 1; i<n; ++i){
-            buy[i] = max(buy[i-1], cooldown[i-1]-prices[i]);
-            sell[i] = buy[i-1] + prices[i];
-            cooldown[i] = max(cooldown[i-1], sell[i-1]);
+    int change(int amount, vector<int>& coins) {
+        vector<int> dp(amount+1, 0);
+        dp[0] = 1;
+        for(int coin:coins){
+            for(int j = coin; j<=amount; ++j){
+                dp[j] += dp[j-coin];
+            }
         }
-        return max(sell[n-1], cooldown[n-1]);
+        return dp[amount];
     }
 };
