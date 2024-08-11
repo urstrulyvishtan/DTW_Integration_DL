@@ -6,19 +6,29 @@
 #include<unordered_set>
 class Solution {
 public:
-    int maxCoins(vector<int>& nums) {
-        int n = nums.size();
-        nums.insert(nums.begin(), 1);
-        nums.push_back(1);
-        vector<vector<int>> dp(n+2, vector<int>(n+2, 0));
-        for(int len = 1; len<=n; ++len){
-            for(int left = 1; left<=n-len+1; ++left){
-                int right = left + len - 1;
-                for(int k = left; k<=right; ++k){
-                    dp[left][right] = max(dp[left][right], dp[left][k-1] + dp[k+1][right] + nums[left-1] * nums[k] * nums[right+1]);
+    bool isMatch(string s, string p) {
+        int m = s.size();
+        int n = p.size();
+
+        vector<vector<bool>> dp(m+1, vector<bool>(n+1, false));
+        dp[0][0] = true;
+        for(int j = 2; j<=n; j++){
+            if(p[j-1] == '*'){
+                dp[0][j] = dp[0][j-2];
+            }
+        }
+        for(int i = 1; i<=m; i++){
+            for(int j = 1; j<=n; j++){
+                if(p[j-1] == s[i-1] || p[j-1] == '.'){
+                    dp[i][j] = dp[i-1][j-1];
+                }else if(p[j-1] == '*'){
+                    dp[i][j] = dp[i][j-2];
+                    if(p[j-2] == s[i-1] || p[j-2] == '.'){
+                        dp[i][j] = dp[i][j] || dp[i-1][j];
+                    }
                 }
             }
         }
-        return dp[1][n];
+        return dp[m][n];
     }
 };
