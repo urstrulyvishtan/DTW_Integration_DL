@@ -6,23 +6,21 @@
 #include<unordered_set>
 class Solution {
 public:
-    int jump(vector<int>& nums) {
-        int n = nums.size();
-        if(n==0) return 0;
-        int jumps= 0;
-        int currentEnd = 0;
-        int farthest = 0;
+    int canCompleteCircuit(vector<int>& gas, vector<int>& cost) {
+        int totalGas = 0;
+        int totalCost = 0;
+        int currentGas = 0;
+        int startIndex = 0;
 
-        for(int i = 0; i<n-1; ++i){
-            farthest = max(farthest, i+nums[i]);
-            if(i==currentEnd){
-                jumps++;
-                currentEnd = farthest;
-                if(currentEnd>=n-1){
-                    break;
-                }
+        for(int i = 0; i<gas.size(); ++i){
+            totalGas += gas[i];
+            totalCost += cost[i];
+            currentGas += gas[i] - cost[i];
+            if(currentGas<0){
+                startIndex = i+1;
+                currentGas = 0;
             }
         }
-        return jumps;
+        return (totalGas>=totalCost)?startIndex:-1;
     }
 };
