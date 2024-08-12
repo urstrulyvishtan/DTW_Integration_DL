@@ -6,17 +6,20 @@
 #include<unordered_set>
 class Solution {
 public:
-    bool mergeTriplets(vector<vector<int>>& triplets, vector<int>& target) {
-        int maxX = 0, maxY = 0, maxZ = 0;
-        
-        for (const auto& triplet : triplets) {
-            if (triplet[0] <= target[0] && triplet[1] <= target[1] && triplet[2] <= target[2]) {
-                maxX = max(maxX, triplet[0]);
-                maxY = max(maxY, triplet[1]);
-                maxZ = max(maxZ, triplet[2]);
+    vector<int> partitionLabels(string s) {
+        unordered_map<char, int> lastOccurrence;
+        for(int i = 0; i<s.size(); ++i){
+            lastOccurrence[s[i]] = i;
+        }
+        vector<int> partitions;
+        int start = 0, end =0;
+        for(int i = 0; i<s.size(); ++i){
+            end = max(end, lastOccurrence[s[i]]);
+            if(i == end){
+                partitions.push_back(end-start+1);
+                start = i+1;
             }
         }
-        
-        return maxX == target[0] && maxY == target[1] && maxZ == target[2];
+        return partitions;
     }
 };
