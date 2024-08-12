@@ -6,20 +6,29 @@
 #include<unordered_set>
 class Solution {
 public:
-    vector<int> partitionLabels(string s) {
-        unordered_map<char, int> lastOccurrence;
-        for(int i = 0; i<s.size(); ++i){
-            lastOccurrence[s[i]] = i;
-        }
-        vector<int> partitions;
-        int start = 0, end =0;
-        for(int i = 0; i<s.size(); ++i){
-            end = max(end, lastOccurrence[s[i]]);
-            if(i == end){
-                partitions.push_back(end-start+1);
-                start = i+1;
+    bool checkValidString(string s) {
+        int balance = 0, n = s.size();
+        for(int i = 0; i<n; ++i){
+            if(s[i] == '(' || s[i] == '*'){
+                ++balance;
+            }else if(s[i] == ')'){
+                --balance;
+            }
+            if(balance<0){
+                return false;
             }
         }
-        return partitions;
+        balance = 0;
+        for(int i = n - 1; i>=0; --i){
+            if(s[i] == ')' || s[i] == '*'){
+                ++balance;
+            }else if(s[i] == '('){
+                --balance;
+            }
+            if(balance<0){
+                return false;
+            }
+        }
+        return true;
     }
 };
