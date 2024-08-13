@@ -6,29 +6,23 @@
 #include<unordered_set>
 class Solution {
 public:
-    bool checkValidString(string s) {
-        int balance = 0, n = s.size();
-        for(int i = 0; i<n; ++i){
-            if(s[i] == '(' || s[i] == '*'){
-                ++balance;
-            }else if(s[i] == ')'){
-                --balance;
-            }
-            if(balance<0){
-                return false;
-            }
-        }
-        balance = 0;
-        for(int i = n - 1; i>=0; --i){
-            if(s[i] == ')' || s[i] == '*'){
-                ++balance;
-            }else if(s[i] == '('){
-                --balance;
-            }
-            if(balance<0){
-                return false;
+    int minExtraChar(string s, vector<string>& dictionary) {
+        unordered_set<string> dict(dictionary.begin(), dictionary.end());
+        int n = s.size();
+        vector<int> dp(n + 1, n); // Initialize with max value, which is the length of the string
+        dp[0] = 0;
+        
+        for (int i = 1; i <= n; ++i) {
+            for (int j = 0; j < i; ++j) {
+                string substr = s.substr(j, i - j);
+                if (dict.count(substr)) {
+                    dp[i] = min(dp[i], dp[j]);
+                } else {
+                    dp[i] = min(dp[i], dp[j] + (i - j));
+                }
             }
         }
-        return true;
+        
+        return dp[n];
     }
 };
