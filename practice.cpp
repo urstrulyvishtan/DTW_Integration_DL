@@ -6,23 +6,13 @@
 #include<unordered_set>
 class Solution {
 public:
-    int minExtraChar(string s, vector<string>& dictionary) {
-        unordered_set<string> dict(dictionary.begin(), dictionary.end());
-        int n = s.size();
-        vector<int> dp(n + 1, n); // Initialize with max value, which is the length of the string
-        dp[0] = 0;
-        
-        for (int i = 1; i <= n; ++i) {
-            for (int j = 0; j < i; ++j) {
-                string substr = s.substr(j, i - j);
-                if (dict.count(substr)) {
-                    dp[i] = min(dp[i], dp[j]);
-                } else {
-                    dp[i] = min(dp[i], dp[j] + (i - j));
-                }
-            }
+    vector<int> getConcatenation(vector<int>& nums) {
+        int n = nums.size();
+        vector<int> ans(2*n);
+        for(int i = 0; i<n; ++i){
+            ans[i] = nums[i];
+            ans[i+n] = nums[i];
         }
-        
-        return dp[n];
+        return ans;
     }
 };
