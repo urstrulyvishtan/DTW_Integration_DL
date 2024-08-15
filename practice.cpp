@@ -6,13 +6,23 @@
 #include<unordered_set>
 class Solution {
 public:
-    vector<int> getConcatenation(vector<int>& nums) {
-        int n = nums.size();
-        vector<int> ans(2*n);
-        for(int i = 0; i<n; ++i){
-            ans[i] = nums[i];
-            ans[i+n] = nums[i];
+    int numOfSubarrays(vector<int>& arr, int k, int threshold) {
+        int n = arr.size();
+        int requiredSum = threshold*k;
+        int currentSum = 0;
+        for(int i = 0; i<k; ++i){
+            currentSum+=arr[i];
         }
-        return ans;
+        int count = 0;
+        if(currentSum >= requiredSum){
+            count++;
+        }
+        for(int i = k; i<n; ++i){
+            currentSum += arr[i] - arr[i-k];
+            if(currentSum >= requiredSum){
+                count++;
+            }
+        }
+        return count;
     }
 };
