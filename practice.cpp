@@ -6,23 +6,14 @@
 #include<unordered_set>
 class Solution {
 public:
-    int numOfSubarrays(vector<int>& arr, int k, int threshold) {
-        int n = arr.size();
-        int requiredSum = threshold*k;
-        int currentSum = 0;
-        for(int i = 0; i<k; ++i){
-            currentSum+=arr[i];
-        }
-        int count = 0;
-        if(currentSum >= requiredSum){
-            count++;
-        }
-        for(int i = k; i<n; ++i){
-            currentSum += arr[i] - arr[i-k];
-            if(currentSum >= requiredSum){
-                count++;
+    bool containsNearbyDuplicate(vector<int>& nums, int k) {
+        unordered_map<int, int> map; // This map stores the value and its last index
+        for (int i = 0; i < nums.size(); ++i) {
+            if (map.find(nums[i]) != map.end() && i - map[nums[i]] <= k) {
+                return true;
             }
+            map[nums[i]] = i; // Update the index of the current element
         }
-        return count;
+        return false;
     }
 };
