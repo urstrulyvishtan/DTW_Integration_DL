@@ -6,33 +6,39 @@
 #include<unordered_set>
 class Solution {
 public:
-    int minimumEffortPath(vector<vector<int>>& heights) {
-        int m = heights.size();
-        int n = heights[0].size();
-        vector<vector<int>> efforts(m, vector<int>(n, INT_MAX));
-        priority_queue<tuple<int, int, int>, vector<tuple<int, int, int>>, greater<tuple<int, int, int>>> pq;
-        pq.emplace(0, 0, 0);
-        efforts[0][0] = 0;
+    double maxProbability(int n, vector<vector<int>>& edges, vector<double>& succProb, int start, int end) {
+        vector<vector<pair<int, double>>> graph(n);
+        for(int i = 0; i<edges.size(); ++i){
+            int u = edges[i][0], v=edges[i][1];
+            double prob = succProb[i];
+            graph[u].emplace_back(v, prob);
+            graph[v].emplace_back(u, prob);
+        }
+        priority_queue<pair<double, int>> pq;
+        pq.emplace(1.0, start);
 
-        vector<int> directions = {0, 1, 0, -1, 0};
+        vector<double> probabilities(n, 0.0);
+        probabilities[start] = 1.0;
+
         while(!pq.empty()){
-            auto[current_effort, x, y] = pq.top();
+            double currProb = pq.top().first;
+            int node = pq.top().second;
             pq.pop();
-            if(x==m-1 && y == n-1){
-                return current_effort;
+
+            if(node == end){
+                return currProb;
             }
-            for(int i = 0; i<4; ++i){
-                int nx = x + directions[i];
-                int ny = y + directions[i+1];
-                if(nx>=0 && ny>=0 && nx<m && ny<n){
-                    int new_effort = max(current_effort, abs(heights[nx][ny] - heights[x][y]));
-                    if(new_effort < efforts[nx][ny]){
-                        efforts[nx][ny] = new_effort;
-                        pq.emplace(new_effort, nx, ny);
-                    }
+            for(auto& neighbor:graph[node]){
+                int nextNode = neighbor.first;
+                double edgeProb = neighbor.second;
+                double newProb = currProb * edgeProb;
+
+                if(newProb > probabilities[nextNode]){
+                    probabilities[nextNode] = newProb;
+                    pq.emplace(newProb, nextNode);
                 }
             }
         }
-        return 0;
+        return 0.0;
     }
 };
