@@ -4,89 +4,77 @@
 #include <algorithm>
 #include<unordered_map>
 #include<unordered_set>
-class UnionFind {
+class UnionFind{
 public:
     vector<int> parent, rank;
-    
-    UnionFind(int n) {
+    UnionFind(int n){
         parent.resize(n);
         rank.resize(n, 0);
         iota(parent.begin(), parent.end(), 0);
     }
-    
-    int find(int u) {
-        if (parent[u] != u)
+    int find(int u){
+        if(u!=parent[u]){
             parent[u] = find(parent[u]);
+        }
         return parent[u];
     }
-    
-    bool unionSets(int u, int v) {
+    bool unionSets(int u, int v){
         int rootU = find(u);
         int rootV = find(v);
-        
-        if (rootU == rootV) return false;
-        
-        if (rank[rootU] > rank[rootV]) {
+        if(rootU == rootV) return false;
+        if(rank[rootU]>rank[rootV]){
             parent[rootV] = rootU;
-        } else if (rank[rootU] < rank[rootV]) {
+        }else if(rank[rootU]<rank[rootV]){
             parent[rootU] = rootV;
-        } else {
+        }else{
             parent[rootV] = rootU;
             rank[rootU]++;
         }
         return true;
     }
 };
-
 class Solution {
 public:
-    int maxNumEdgesToRemove(int n, vector<vector<int>>& edges) {
-        UnionFind aliceUF(n + 1), bobUF(n + 1);
-        int removedEdges = 0, aliceEdges = 0, bobEdges = 0;
-        
-        // Type 3 edges (usable by both Alice and Bob)
-        for (const auto& edge : edges) {
-            if (edge[0] == 3) {
-                bool aliceMerged = aliceUF.unionSets(edge[1], edge[2]);
-                bool bobMerged = bobUF.unionSets(edge[1], edge[2]);
-                if (!aliceMerged && !bobMerged) {
-                    // Both Alice and Bob already connected, so this edge is redundant
-                    removedEdges++;
-                } else {
-                    // Successful merge for both Alice and Bob
-                    aliceEdges++;
-                    bobEdges++;
+    vector<vector<int>> findCriticalAndPseudoCriticalEdges(int n, vector<vector<int>>& edges) {
+        int m = edges.size();
+        for(int i = 0; i<m; ++i){
+            edges[i].push_back(i);
+        }
+        sort(edges.begin(), edges.end(), [](const auto& a, const auto& b){
+            return a[2]<b[2];
+        });
+        auto kruskalMST = [&](int n, vector<vector<int>>& edges, int excludeEdge = -1, int includeEdge = -1) -> int{
+            UnionFind uf(n);
+            int totalWeight = 0;
+            int edgesUsed = 0;
+            if(includeEdge!=-1){
+                uf.unionSets(edges[includeEdge][0], edges[includeEdge][1]);
+                totalWeight += edges[includeEdge][2];
+                edgesUsed++;
+            }
+            for(int i = 0; i<edges.size(); ++i){
+                if(i == excludeEdge) continue;
+                if(uf.unionSets(edges[i][0], edges[i][1])){
+                    totalWeight += edges[i][2];
+                    edgesUsed++;
+                    if(edgesUsed == n-1) break;
+                }
+            }
+            return edgesUsed == n-1?totalWeight:INT_MAX;
+        };
+        int originalMSTWeight = kruskalMST(n, edges);
+        vector<int> criticalEdges, pseudoCriticalEdges;
+        for(int i = 0; i<m; ++i){
+            int mstWeightWithoutEdge = kruskalMST(n, edges, i);
+            if(mstWeightWithoutEdge>originalMSTWeight){
+                criticalEdges.push_back(edges[i][3]);
+            }else{
+                int mstWeightWithEdge = kruskalMST(n, edges, -1, i);
+                if(mstWeightWithEdge == originalMSTWeight){
+                    pseudoCriticalEdges.push_back(edges[i][3]);
                 }
             }
         }
-        
-        // Type 1 edges (only Alice can use)
-        for (const auto& edge : edges) {
-            if (edge[0] == 1) {
-                if (aliceUF.unionSets(edge[1], edge[2])) {
-                    aliceEdges++;
-                } else {
-                    removedEdges++;
-                }
-            }
-        }
-        
-        // Type 2 edges (only Bob can use)
-        for (const auto& edge : edges) {
-            if (edge[0] == 2) {
-                if (bobUF.unionSets(edge[1], edge[2])) {
-                    bobEdges++;
-                } else {
-                    removedEdges++;
-                }
-            }
-        }
-        
-        // Check if both Alice and Bob can traverse the entire graph
-        if (aliceEdges != n - 1 || bobEdges != n - 1) {
-            return -1;
-        }
-        
-        return removedEdges;
+        return {criticalEdges, pseudoCriticalEdges};
     }
 };
