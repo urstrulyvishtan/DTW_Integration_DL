@@ -6,14 +6,14 @@
 #include<unordered_set>
 class Solution {
 public:
-    vector<int> replaceElements(vector<int>& arr) {
-        int n = arr.size();
-        int maxRight = -1;
-        for(int i = n-1; i>=0; --i){
-            int current = arr[i];
-            arr[i] = maxRight;
-            maxRight = max(maxRight, current);
+    bool isSubsequence(string s, string t) {
+        int i = 0, j = 0;
+        while(j<t.length() && i<s.length()){
+            if(s[i] == t[j]){
+                i++;
+            }
+            j++;
         }
-        return arr;
+        return i == s.length();
     }
 };
