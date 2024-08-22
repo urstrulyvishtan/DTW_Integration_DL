@@ -6,15 +6,15 @@
 #include<unordered_set>
 class Solution {
 public:
-    int lengthOfLastWord(string s) {
-        int end = s.size() - 1;
-        while(end>=0 && s[end] == ' '){
-            end--;
+    string longestCommonPrefix(vector<string>& strs) {
+        if(strs.empty()) return "";
+        std::string prefix = strs[0];
+        for(int i = 1; i<strs.size(); i++){
+            while(strs[i].find(prefix)!=0){
+                prefix = prefix.substr(0, prefix.size() - 1);
+                if(prefix.empty()) return "";
+            }
         }
-        int start = end;
-        while(start >= 0 && s[start]!= ' '){
-            start--;
-        }
-        return end-start;
+        return prefix;
     }
 };
