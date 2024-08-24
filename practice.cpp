@@ -16,35 +16,21 @@
  */
 class Solution {
 public:
-    ListNode* reverseList(ListNode* head){
-        ListNode* prev = nullptr;
-        while(head){
-            ListNode* nextNode = head->next;
-            head->next = prev;
-            prev = head;
-            head = nextNode;
-        }
-        return prev;
-    }
-    bool isPalindrome(ListNode* head) {
-        if(!head||!head->next) return true;
-        ListNode* slow = head;
-        ListNode* fast = head;
-        while(fast&&fast->next){
-            slow = slow->next;
-            fast = fast->next->next;
-        }
-        ListNode* secondHalf = reverseList(slow);
-        ListNode* firstHalf = head;
-        ListNode* temp = secondHalf;
-        while(temp){
-            if(firstHalf->val != temp->val){
-                return false;
+    ListNode* removeElements(ListNode* head, int val) {
+        ListNode* dummy = new ListNode(-1);
+        dummy->next = head;
+        ListNode* prev = dummy;
+        ListNode* curr = head;
+        while(curr!=nullptr){
+            if(curr->val == val){
+                prev->next = curr->next;
+            }else{
+                prev = curr;
             }
-            firstHalf = firstHalf->next;
-            temp = temp->next;
+            curr = curr->next;
         }
-        reverseList(secondHalf);
-        return true;
+        ListNode* newHead = dummy -> next;
+        delete dummy;
+        return newHead;
     }
 };
