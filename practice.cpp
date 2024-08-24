@@ -16,21 +16,18 @@
  */
 class Solution {
 public:
-    ListNode* removeElements(ListNode* head, int val) {
-        ListNode* dummy = new ListNode(-1);
-        dummy->next = head;
-        ListNode* prev = dummy;
-        ListNode* curr = head;
-        while(curr!=nullptr){
-            if(curr->val == val){
-                prev->next = curr->next;
-            }else{
-                prev = curr;
-            }
-            curr = curr->next;
+    ListNode* deleteDuplicates(ListNode* head) {
+        if(head == nullptr || head->next == nullptr){
+            return head;
         }
-        ListNode* newHead = dummy -> next;
-        delete dummy;
-        return newHead;
+        ListNode* curr = head;
+        while(curr!=nullptr && curr->next != nullptr){
+            if(curr->val == curr->next->val){
+                curr->next = curr->next->next;
+            }else{
+                curr = curr->next;
+            }
+        }
+        return head;
     }
 };
