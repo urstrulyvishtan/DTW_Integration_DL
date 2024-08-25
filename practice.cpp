@@ -4,44 +4,51 @@
 #include <algorithm>
 #include<unordered_map>
 #include<unordered_set>
-class MyStack {
+class MyQueue {
 private:
-    queue<int> q1;
-    queue<int> q2;
+    stack<int> stack1;
+    stack<int> stack2;
 public:
-    MyStack() {
+    MyQueue() {
         
     }
     
     void push(int x) {
-        q2.push(x);
-        while(!q1.empty()){
-            q2.push(q1.front());
-            q1.pop();
-        }
-        swap(q1, q2);
+        stack1.push(x);
     }
     
     int pop() {
-        int topElement = q1.front();
-        q1.pop();
-        return topElement;
+        if(stack2.empty()){
+            while(!stack1.empty()){
+                stack2.push(stack1.top());
+                stack1.pop();
+            }
+        }
+        int frontElement = stack2.top();
+        stack2.pop();
+        return frontElement;
     }
     
-    int top() {
-        return q1.front();
+    int peek() {
+        if(stack2.empty()){
+            while(!stack1.empty()){
+                stack2.push(stack1.top());
+                stack1.pop();
+            }
+        }   
+        return stack2.top();
     }
     
     bool empty() {
-        return q1.empty();
+        return stack1.empty() && stack2.empty();
     }
 };
 
 /**
- * Your MyStack object will be instantiated and called as such:
- * MyStack* obj = new MyStack();
+ * Your MyQueue object will be instantiated and called as such:
+ * MyQueue* obj = new MyQueue();
  * obj->push(x);
  * int param_2 = obj->pop();
- * int param_3 = obj->top();
+ * int param_3 = obj->peek();
  * bool param_4 = obj->empty();
  */
