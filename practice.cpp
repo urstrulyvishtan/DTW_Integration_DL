@@ -4,24 +4,25 @@
 #include <algorithm>
 #include<unordered_map>
 #include<unordered_set>
-/**
- * Definition for singly-linked list.
- * struct ListNode {
- *     int val;
- *     ListNode *next;
- *     ListNode(int x) : val(x), next(NULL) {}
- * };
- */
 class Solution {
 public:
-    ListNode *getIntersectionNode(ListNode *headA, ListNode *headB) {
-        if(!headA || !headB) return nullptr;
-        ListNode* ptrA = headA;
-        ListNode* ptrB = headB;
-        while(ptrA != ptrB){
-            ptrA = ptrA ? ptrA->next:headB;
-            ptrB = ptrB ? ptrB->next:headA;
+    int calPoints(vector<string>& ops) {
+        vector<int> scores;
+        for(const string& op:ops){
+            if(op=="C"){
+                scores.pop_back();
+            }else if(op=="D"){
+                scores.push_back(2*scores.back());
+            }else if(op=="+"){
+                scores.push_back(scores.back()+scores[scores.size()-2]);
+            }else{
+                scores.push_back(stoi(op));
+            }
         }
-        return ptrA;
+        int totalScore = 0;
+        for(int score:scores){
+            totalScore+=score;
+        }
+        return totalScore;
     }
 };
