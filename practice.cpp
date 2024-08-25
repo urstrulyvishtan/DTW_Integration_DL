@@ -4,25 +4,44 @@
 #include <algorithm>
 #include<unordered_map>
 #include<unordered_set>
-class Solution {
+class MyStack {
+private:
+    queue<int> q1;
+    queue<int> q2;
 public:
-    int calPoints(vector<string>& ops) {
-        vector<int> scores;
-        for(const string& op:ops){
-            if(op=="C"){
-                scores.pop_back();
-            }else if(op=="D"){
-                scores.push_back(2*scores.back());
-            }else if(op=="+"){
-                scores.push_back(scores.back()+scores[scores.size()-2]);
-            }else{
-                scores.push_back(stoi(op));
-            }
+    MyStack() {
+        
+    }
+    
+    void push(int x) {
+        q2.push(x);
+        while(!q1.empty()){
+            q2.push(q1.front());
+            q1.pop();
         }
-        int totalScore = 0;
-        for(int score:scores){
-            totalScore+=score;
-        }
-        return totalScore;
+        swap(q1, q2);
+    }
+    
+    int pop() {
+        int topElement = q1.front();
+        q1.pop();
+        return topElement;
+    }
+    
+    int top() {
+        return q1.front();
+    }
+    
+    bool empty() {
+        return q1.empty();
     }
 };
+
+/**
+ * Your MyStack object will be instantiated and called as such:
+ * MyStack* obj = new MyStack();
+ * obj->push(x);
+ * int param_2 = obj->pop();
+ * int param_3 = obj->top();
+ * bool param_4 = obj->empty();
+ */
