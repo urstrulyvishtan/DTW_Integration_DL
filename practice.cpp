@@ -6,24 +6,21 @@
 #include<unordered_set>
 class Solution {
 public:
-    vector<int> sortedSquares(vector<int>& nums) {
-        int n = nums.size();
-        vector<int> result(n);
-        int left = 0;
-        int right = n - 1;
-        int position = n-1;
-        while(left<=right){
-            int leftSquare = nums[left] * nums[left];
-            int rightSquare = nums[right] * nums[right];
-            if(leftSquare>rightSquare){
-                result[position] = leftSquare;
-                left++;
+    bool isPerfectSquare(int num) {
+        if(num<1) return false;
+        long long low = 1;
+        long long high = num;
+        while(low<=high){
+            long long mid = low+(high-low)/2;
+            long long square = mid * mid;
+            if(square == num){
+                return true;
+            }else if(square<num){
+                low = mid+1;
             }else{
-                result[position] = rightSquare;
-                right--;
+                high = mid - 1;
             }
-            position--;
         }
-        return result;
+        return false;
     }
 };
