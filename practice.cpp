@@ -6,21 +6,23 @@
 #include<unordered_set>
 class Solution {
 public:
-    bool isPerfectSquare(int num) {
-        if(num<1) return false;
-        long long low = 1;
-        long long high = num;
+    int mySqrt(int x) {
+        if(x<2) return x;
+        long low = 1;
+        long high = x;
+        int result = 0;
         while(low<=high){
-            long long mid = low+(high-low)/2;
-            long long square = mid * mid;
-            if(square == num){
-                return true;
-            }else if(square<num){
-                low = mid+1;
+            long mid = low+(high-low)/2;
+            long square = mid*mid;
+            if(square == x){
+                return mid;
+            }else if(square<x){
+                result = mid;
+                low = mid + 1;
             }else{
                 high = mid - 1;
             }
         }
-        return false;
+        return result;
     }
 };
