@@ -6,19 +6,24 @@
 #include<unordered_set>
 class Solution {
 public:
-    int arrangeCoins(int n) {
-        long left = 0, right = n;
+    vector<int> sortedSquares(vector<int>& nums) {
+        int n = nums.size();
+        vector<int> result(n);
+        int left = 0;
+        int right = n - 1;
+        int position = n-1;
         while(left<=right){
-            long mid = left + (right - left)/2;
-            long current = mid * (mid + 1)/2;
-            if(current == n){
-                return mid;
-            }else if(current<n){
-                left = mid + 1;
+            int leftSquare = nums[left] * nums[left];
+            int rightSquare = nums[right] * nums[right];
+            if(leftSquare>rightSquare){
+                result[position] = leftSquare;
+                left++;
             }else{
-                right = mid - 1;
+                result[position] = rightSquare;
+                right--;
             }
+            position--;
         }
-        return right;
+        return result;
     }
 };
