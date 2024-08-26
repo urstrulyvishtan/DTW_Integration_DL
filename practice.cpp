@@ -6,21 +6,18 @@
 #include<unordered_set>
 class Solution {
 public:
-    string makeGood(string s) {
-        std::stack<char> stack;
-        for(char ch:s){
-            if(!stack.empty() && ((islower(ch) && toupper(ch) == stack.top()) || (isupper(ch) && tolower(ch) == stack.top()))){
-                stack.pop();
+    int searchInsert(vector<int>& nums, int target) {
+        int left = 0, right = nums.size() - 1;
+        while(left<=right){
+            int mid = left + (right - left)/2;
+            if(nums[mid] == target){
+                return mid;
+            }else if(nums[mid]<target){
+                left = mid + 1;
             }else{
-                stack.push(ch);
+                right = mid - 1;
             }
         }
-        std::string result;
-        while(!stack.empty()){
-            result.push_back(stack.top());
-            stack.pop();
-        }
-        std::reverse(result.begin(), result.end());
-        return result;
+        return left;
     }
 };
