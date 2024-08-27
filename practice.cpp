@@ -6,20 +6,18 @@
 #include<unordered_set>
 class Solution {
 public:
-    int totalFruit(vector<int>& fruits) {
-        unordered_map<int, int> fruitCount;
-        int left = 0, maxFruits = 0;
-        for(int right = 0; right<fruits.size(); ++right){
-            fruitCount[fruits[right]]++;
-            while(fruitCount.size()>2){
-                fruitCount[fruits[left]]--;
-                if(fruitCount[fruits[left]] == 0){
-                    fruitCount.erase(fruits[left]);
-                }
+    int maxFrequency(vector<int>& nums, int k) {
+        sort(nums.begin(), nums.end());
+        long long total = 0;
+        int left = 0, result = 1;
+        for(int right = 0; right<nums.size(); ++right){
+            total+=nums[right];
+            while((long long)nums[right] * (right-left+1)>total+k){
+                total -= nums[left];
                 left++;
             }
-            maxFruits = max(maxFruits, right-left+1);
+            result = max(result, right-left+1);
         }
-        return maxFruits;
+        return result;
     }
 };
