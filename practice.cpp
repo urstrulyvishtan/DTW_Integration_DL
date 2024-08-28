@@ -4,7 +4,7 @@
 #include <algorithm>
 #include<unordered_map>
 #include<unordered_set>
-/*
+/**
  * Definition for a binary tree node.
  * struct TreeNode {
  *     int val;
@@ -17,16 +17,16 @@
  */
 class Solution {
 public:
-    vector<int> inorderTraversal(TreeNode* root) {
+    vector<int> preorderTraversal(TreeNode* root) {
         vector<int> result;
-        inorderHelper(root, result);
+        preorderHelper(root, result);
         return result;
-        }
+    }
 private:
-    void inorderHelper(TreeNode* root, vector<int>& result){
+    void preorderHelper(TreeNode* root, vector<int>& result){
         if(root == nullptr) return;
-        inorderHelper(root->left, result);
         result.push_back(root->val);
-        inorderHelper(root->right, result);
+        preorderHelper(root->left, result);
+        preorderHelper(root->right, result);
     }
 };
