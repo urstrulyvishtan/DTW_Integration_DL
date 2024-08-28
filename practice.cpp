@@ -17,16 +17,16 @@
  */
 class Solution {
 public:
-    vector<int> preorderTraversal(TreeNode* root) {
+    vector<int> postorderTraversal(TreeNode* root) {
         vector<int> result;
-        preorderHelper(root, result);
+        postorderHelper(root, result);
         return result;
     }
 private:
-    void preorderHelper(TreeNode* root, vector<int>& result){
+    void postorderHelper(TreeNode* root, vector<int>& result){
         if(root == nullptr) return;
+        postorderHelper(root->left, result);
+        postorderHelper(root->right, result);
         result.push_back(root->val);
-        preorderHelper(root->left, result);
-        preorderHelper(root->right, result);
     }
 };
