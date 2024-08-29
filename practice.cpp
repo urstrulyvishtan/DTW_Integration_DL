@@ -4,29 +4,14 @@
 #include <algorithm>
 #include<unordered_map>
 #include<unordered_set>
-/**
- * Definition for a binary tree node.
- * struct TreeNode {
- *     int val;
- *     TreeNode *left;
- *     TreeNode *right;
- *     TreeNode() : val(0), left(nullptr), right(nullptr) {}
- *     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
- *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
- * };
- */
 class Solution {
 public:
-    vector<int> postorderTraversal(TreeNode* root) {
-        vector<int> result;
-        postorderHelper(root, result);
-        return result;
-    }
-private:
-    void postorderHelper(TreeNode* root, vector<int>& result){
-        if(root == nullptr) return;
-        postorderHelper(root->left, result);
-        postorderHelper(root->right, result);
-        result.push_back(root->val);
+    int buyChoco(vector<int>& prices, int money) {
+        sort(prices.begin(), prices.end());
+        int cost = prices[0]+prices[1];
+        if(cost<=money){
+            return money-cost;
+        }
+        return money;
     }
 };
