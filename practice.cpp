@@ -6,12 +6,12 @@
 #include<unordered_set>
 class Solution {
 public:
-    int buyChoco(vector<int>& prices, int money) {
-        sort(prices.begin(), prices.end());
-        int cost = prices[0]+prices[1];
-        if(cost<=money){
-            return money-cost;
-        }
-        return money;
+    string maximumOddBinaryNumber(string s) {
+        int countOnes = count(s.begin(), s.end(), '1');
+        int countZeros = s.size() - countOnes;
+        string result(countOnes - 1, '1');
+        result += string(countZeros, '0');
+        result += '1';
+        return result;
     }
 };
