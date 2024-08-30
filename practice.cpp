@@ -6,17 +6,12 @@
 #include<unordered_set>
 class Solution {
 public:
-    int rangeBitwiseAnd(int left, int right) {
-        int shift = 0;
-        
-        // Find the common prefix of left and right
-        while (left < right) {
-            left >>= 1;
-            right >>= 1;
-            shift++;
+    vector<int> shuffle(vector<int>& nums, int n) {
+        vector<int> result(2 * n);
+        for (int i = 0; i < n; i++) {
+            result[2 * i] = nums[i];      // Place x1, x2, ..., xn
+            result[2 * i + 1] = nums[i + n];  // Place y1, y2, ..., yn
         }
-        
-        // Shift the common prefix back to its original position
-        return left << shift;
+        return result;
     }
 };
