@@ -6,17 +6,17 @@
 #include<unordered_set>
 class Solution {
 public:
-    int maxDepth(string s) {
-        int depth = 0;
-        int maxDepth = 0;
-        for(char c:s){
-            if(c=='('){
-                depth++;
-                maxDepth = max(maxDepth, depth);
-            }else if(c==')'){
-                depth--;
-            }
+    int rangeBitwiseAnd(int left, int right) {
+        int shift = 0;
+        
+        // Find the common prefix of left and right
+        while (left < right) {
+            left >>= 1;
+            right >>= 1;
+            shift++;
         }
-        return maxDepth;
+        
+        // Shift the common prefix back to its original position
+        return left << shift;
     }
 };
