@@ -6,12 +6,20 @@
 #include<unordered_set>
 class Solution {
 public:
-    vector<int> shuffle(vector<int>& nums, int n) {
-        vector<int> result(2 * n);
-        for (int i = 0; i < n; i++) {
-            result[2 * i] = nums[i];      // Place x1, x2, ..., xn
-            result[2 * i + 1] = nums[i + n];  // Place y1, y2, ..., yn
+    vector<int> addToArrayForm(vector<int>& num, int k) {
+        int n = num.size();
+        vector<int> result;
+        int carry = k;
+        for(int i = n - 1; i>=0; i--){
+            int sum = num[i] + carry;
+            result.push_back(sum%10);
+            carry = sum/10;
         }
+        while(carry>0){
+            result.push_back(carry%10);
+            carry/=10;
+        }
+        reverse(result.begin(), result.end());
         return result;
     }
 };
