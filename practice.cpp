@@ -6,20 +6,24 @@
 #include<unordered_set>
 class Solution {
 public:
-    vector<vector<int>> generate(int numRows) {
-        vector<vector<int>> triangle;
-        if(numRows == 0){
-            return triangle;
-        }
-        triangle.push_back({1});
-        for(int i = 1; i<numRows; ++i)
-        {
-            vector<int> row(i+1, 1);
-            for(int j = 1; j<i; ++j){
-                row[j] = triangle[i-1][j-1] + triangle[i-1][j];
+    bool validPalindrome(string s) {
+        int left = 0, right = s.size()-1;
+        while(left<right){
+            if(s[left]!=s[right]){
+                return isPalindrome(s, left+1, right)||isPalindrome(s, left, right-1);
             }
-            triangle.push_back(row);
+            left++;
+            right--;
         }
-        return triangle;
+        return true;
+    }
+private:
+    bool isPalindrome(const std::string& s, int left, int right){
+        while(left<right){
+            if(s[left]!=s[right]) return false;
+            left++;
+            right--;
+        }
+        return true;
     }
 };
