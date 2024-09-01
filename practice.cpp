@@ -6,24 +6,15 @@
 #include<unordered_set>
 class Solution {
 public:
-    bool validPalindrome(string s) {
-        int left = 0, right = s.size()-1;
-        while(left<right){
-            if(s[left]!=s[right]){
-                return isPalindrome(s, left+1, right)||isPalindrome(s, left, right-1);
+    vector<int> twoSum(vector<int>& nums, int target) {
+        int n = nums.size();
+        for (int i = 0; i < n - 1; i++) {
+            for (int j = i + 1; j < n; j++) {
+                if (nums[i] + nums[j] == target) {
+                    return {i, j};
+                }
             }
-            left++;
-            right--;
         }
-        return true;
-    }
-private:
-    bool isPalindrome(const std::string& s, int left, int right){
-        while(left<right){
-            if(s[left]!=s[right]) return false;
-            left++;
-            right--;
-        }
-        return true;
+        return {};
     }
 };
