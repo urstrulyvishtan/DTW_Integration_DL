@@ -6,15 +6,22 @@
 #include<unordered_set>
 class Solution {
 public:
-    vector<int> twoSum(vector<int>& nums, int target) {
-        int n = nums.size();
-        for (int i = 0; i < n - 1; i++) {
-            for (int j = i + 1; j < n; j++) {
-                if (nums[i] + nums[j] == target) {
-                    return {i, j};
+    bool isValid(string s) {
+        stack<char> st; // create an empty stack to store opening brackets
+        for (char c : s) { // loop through each character in the string
+            if (c == '(' || c == '{' || c == '[') { // if the character is an opening bracket
+                st.push(c); // push it onto the stack
+            } else { // if the character is a closing bracket
+                if (st.empty() || // if the stack is empty or 
+                    (c == ')' && st.top() != '(') || // the closing bracket doesn't match the corresponding opening bracket at the top of the stack
+                    (c == '}' && st.top() != '{') ||
+                    (c == ']' && st.top() != '[')) {
+                    return false; // the string is not valid, so return false
                 }
+                st.pop(); // otherwise, pop the opening bracket from the stack
             }
         }
-        return {};
+        return st.empty(); // if the stack is empty, all opening brackets have been matched with their corresponding closing brackets,
+                           // so the string is valid, otherwise, there are unmatched opening brackets, so return false
     }
 };
