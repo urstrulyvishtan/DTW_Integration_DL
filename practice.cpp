@@ -6,27 +6,20 @@
 #include<unordered_set>
 class Solution {
 public:
-    vector<int> topKFrequent(vector<int>& nums, int k) {
-        unordered_map<int, int> counter;
-        for (int n : nums) {
-            counter[n]++;
+    vector<int> dailyTemperatures(vector<int>& temperatures) {
+        int n = temperatures.size();
+        vector<int> result(n, 0);
+        stack<int> stk;
+
+        for (int i = 0; i < n; ++i) {
+            while (!stk.empty() && temperatures[i] > temperatures[stk.top()]) {
+                int idx = stk.top();
+                stk.pop();
+                result[idx] = i - idx;
+            }
+            stk.push(i);
         }
-        
-        auto comp = [](pair<int, int>& a, pair<int, int>& b) {
-            return a.second < b.second;
-        };
-        priority_queue<pair<int, int>, vector<pair<int, int>>, decltype(comp)> heap(comp);
-        
-        for (auto& entry : counter) {
-            heap.push({entry.first, entry.second});
-        }
-        
-        vector<int> res;
-        while (k-- > 0) {
-            res.push_back(heap.top().first);
-            heap.pop();
-        }
-        
-        return res;        
+
+        return result;
     }
 };
