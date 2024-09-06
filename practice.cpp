@@ -6,37 +6,28 @@
 #include<unordered_set>
 class Solution {
 public:
-    double findMedianSortedArrays(vector<int>& nums1, vector<int>& nums2) {
-        if (nums1.size() > nums2.size()) {
-            return findMedianSortedArrays(nums2, nums1);
-        }
-
-        int m = nums1.size();
-        int n = nums2.size();
-        int low = 0, high = m;
-        
-        while (low <= high) {
-            int partitionX = (low + high) / 2;
-            int partitionY = (m + n + 1) / 2 - partitionX;
-
-            int maxX = (partitionX == 0) ? INT_MIN : nums1[partitionX - 1];
-            int minX = (partitionX == m) ? INT_MAX : nums1[partitionX];
-            int maxY = (partitionY == 0) ? INT_MIN : nums2[partitionY - 1];
-            int minY = (partitionY == n) ? INT_MAX : nums2[partitionY];
-
-            if (maxX <= minY && maxY <= minX) {
-                if ((m + n) % 2 == 0) {
-                    return (double)(max(maxX, maxY) + min(minX, minY)) / 2;
-                } else {
-                    return (double)max(maxX, maxY);
+    int trap(vector<int>& height) {
+        int left = 0, right = height.size() - 1;
+        int left_max = 0, right_max = 0;
+        int water_trapped = 0;
+        while(left<right){
+            if(height[left] < height[right]){
+                if(height[left] >= left_max){
+                    left_max = height[left];
+                }else{
+                    water_trapped += left_max - height[left];                
                 }
-            } else if (maxX > minY) {
-                high = partitionX - 1;
-            } else {
-                low = partitionX + 1;
+                ++left;
+            }else{
+                if(height[right] >= right_max){
+                    right_max = height[right];
+                }else{
+                    water_trapped += right_max - height[right];
+                }
+                --right;
+
             }
         }
-
-        throw invalid_argument("Input arrays are not sorted");
+        return water_trapped;
     }
 };
