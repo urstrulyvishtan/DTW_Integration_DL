@@ -6,28 +6,16 @@
 #include<unordered_set>
 class Solution {
 public:
-    int trap(vector<int>& height) {
-        int left = 0, right = height.size() - 1;
-        int left_max = 0, right_max = 0;
-        int water_trapped = 0;
-        while(left<right){
-            if(height[left] < height[right]){
-                if(height[left] >= left_max){
-                    left_max = height[left];
-                }else{
-                    water_trapped += left_max - height[left];                
-                }
-                ++left;
-            }else{
-                if(height[right] >= right_max){
-                    right_max = height[right];
-                }else{
-                    water_trapped += right_max - height[right];
-                }
-                --right;
-
+    int findMin(vector<int>& arr) {
+        int lo=0,hi=arr.size()-1,min_ele=arr[0];
+        while(lo<=hi){
+            int mid=lo+(hi-lo)/2;
+            if(arr[mid]<=arr[hi]){
+                if(arr[mid]<min_ele)min_ele=arr[mid];
+                hi=mid-1;
             }
+            else lo=mid+1;
         }
-        return water_trapped;
-    }
+        return min_ele;
+}   
 };
