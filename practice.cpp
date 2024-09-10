@@ -4,32 +4,25 @@
 #include <algorithm>
 #include<unordered_map>
 #include<unordered_set>
-class KthLargest {
+class Solution {
 public:
-    KthLargest(int k, vector<int>& nums) : k(k){
-        for(int num : nums){
-            add(num);
-        }
-    }
-    
-    int add(int val) {
-        if(minHeap.size() < k){
-            minHeap.push(val);
-        } else if(val>minHeap.top()){
-            minHeap.push(val);
-            if(minHeap.size()>k){
-                minHeap.pop();
-            }
-        }
-        return minHeap.top();
-    }
-private:
-    std::priority_queue<int, std::vector<int>, std::greater<int>> minHeap;
-    int k;
-};
+    vector<int> maxSlidingWindow(vector<int>& nums, int k) {
+        deque<int> deq;
+        vector<int> result;
 
-/**
- * Your KthLargest object will be instantiated and called as such:
- * KthLargest* obj = new KthLargest(k, nums);
- * int param_1 = obj->add(val);
- */
+        for(int i = 0; i<nums.size(); ++i){
+            if(!deq.empty() && deq.front() == i - k){
+                deq.pop_front();
+            }
+            while(!deq.empty() && nums[deq.back()]<=nums[i]){
+                deq.pop_back();
+            }
+        deq.push_back(i);
+        if(i>=k-1){
+            result.push_back(nums[deq.front()]);
+        }
+    }
+    return result;
+}
+        
+};
