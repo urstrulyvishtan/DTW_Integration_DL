@@ -6,23 +6,22 @@
 #include<unordered_set>
 class Solution {
 public:
-    vector<int> maxSlidingWindow(vector<int>& nums, int k) {
-        deque<int> deq;
-        vector<int> result;
-
-        for(int i = 0; i<nums.size(); ++i){
-            if(!deq.empty() && deq.front() == i - k){
-                deq.pop_front();
+    int maxScore(vector<int>& cardPoints, int k) {
+        int n=cardPoints.size();
+        int sum=0;
+        for(int i=0;i<n;i++)
+        sum+=cardPoints[i];
+        int m=n-k;
+        int ans=0,final_ans=INT_MAX;
+        int start=0;
+        for(int i=0;i<n;i++){
+            ans+=cardPoints[i];
+            if(i-start+1==m){
+                final_ans=min(final_ans,ans);
+                ans-=cardPoints[start];
+                start++;
             }
-            while(!deq.empty() && nums[deq.back()]<=nums[i]){
-                deq.pop_back();
-            }
-        deq.push_back(i);
-        if(i>=k-1){
-            result.push_back(nums[deq.front()]);
         }
+        return final_ans==INT_MAX ? sum : sum-final_ans;
     }
-    return result;
-}
-        
 };
