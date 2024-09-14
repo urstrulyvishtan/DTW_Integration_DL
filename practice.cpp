@@ -4,33 +4,24 @@
 #include <algorithm>
 #include<unordered_map>
 #include<unordered_set>
-/**
- * Definition for singly-linked list.
- * struct ListNode {
- *     int val;
- *     ListNode *next;
- *     ListNode() : val(0), next(nullptr) {}
- *     ListNode(int x) : val(x), next(nullptr) {}
- *     ListNode(int x, ListNode *next) : val(x), next(next) {}
- * };
- */
 class Solution {
 public:
-    ListNode* removeNthFromEnd(ListNode* head, int n) {
-        ListNode* res = new ListNode(0, head);
-        ListNode* dummy = res;
+    int longestConsecutive(vector<int>& nums) {
+        unordered_set<int> numSet(nums.begin(), nums.end());
+        int longest = 0;
 
-        for (int i = 0; i < n; i++) {
-            head = head->next;
+        for (int num : nums) {
+            if (numSet.find(num - 1) == numSet.end()) {
+                int length = 1;
+
+                while (numSet.find(num + length) != numSet.end()) {
+                    length++;
+                }
+
+                longest = max(longest, length);
+            }
         }
 
-        while (head != nullptr) {
-            head = head->next;
-            dummy = dummy->next;
-        }
-
-        dummy->next = dummy->next->next;
-
-        return res->next;        
+        return longest;
     }
 };
