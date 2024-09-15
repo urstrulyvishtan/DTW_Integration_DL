@@ -4,24 +4,18 @@
 #include <algorithm>
 #include<unordered_map>
 #include<unordered_set>
-class Solution {
-public:
-    int longestConsecutive(vector<int>& nums) {
-        unordered_set<int> numSet(nums.begin(), nums.end());
-        int longest = 0;
-
-        for (int num : nums) {
-            if (numSet.find(num - 1) == numSet.end()) {
-                int length = 1;
-
-                while (numSet.find(num + length) != numSet.end()) {
-                    length++;
-                }
-
-                longest = max(longest, length);
-            }
+void makeCombination(std::vector<int>& candidates, int target, int idx, vector<int>& comb, int total, vector<vector<int>>& res) {
+        if (total == target) {
+            res.push_back(comb);
+            return;
         }
 
-        return longest;
+        if (total > target || idx >= candidates.size()) {
+            return;
+        }
+
+        comb.push_back(candidates[idx]);
+        makeCombination(candidates, target, idx, comb, total + candidates[idx], res);
+        comb.pop_back();
+        makeCombination(candidates, target, idx + 1, comb, total, res);
     }
-};
