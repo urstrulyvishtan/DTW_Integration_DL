@@ -4,20 +4,31 @@
 #include <algorithm>
 #include<unordered_map>
 #include<unordered_set>
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode() : val(0), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
+ * };
+ */
 class Solution {
 public:
-    int maxProfit(vector<int>& prices) {
-        int buyPrice = prices[0];
-        int profit = 0;
-
-        for (int i = 1; i < prices.size(); i++) {
-            if (buyPrice > prices[i]) {
-                buyPrice = prices[i];
-            }
-
-            profit = max(profit, prices[i] - buyPrice);
+    TreeNode* invertTree(TreeNode* root) {
+        if (root == nullptr) {
+            return nullptr;
         }
-
-        return profit;        
+        
+        TreeNode* temp = root->left;
+        root->left = root->right;
+        root->right = temp;
+        
+        invertTree(root->left);
+        invertTree(root->right);
+        
+        return root;        
     }
 };
