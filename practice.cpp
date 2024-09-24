@@ -4,23 +4,37 @@
 #include <algorithm>
 #include<unordered_map>
 #include<unordered_set>
-/**
- * Definition for a binary tree node.
- * struct TreeNode {
- *     int val;
- *     TreeNode *left;
- *     TreeNode *right;
- *     TreeNode() : val(0), left(nullptr), right(nullptr) {}
- *     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
- *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
- * };
- */
 class Solution {
 public:
-    int maxDepth(TreeNode* root) {
-        if(!root) return 0;
-        int maxLeft = maxDepth(root->left);
-        int maxRight = maxDepth(root->right);
-        return max(maxLeft, maxRight)+1;
+    vector<vector<int>> threeSum(vector<int>& nums) {
+        vector<vector<int>> res;
+        sort(nums.begin(), nums.end());
+
+        for (int i = 0; i < nums.size(); i++) {
+            if (i > 0 && nums[i] == nums[i-1]) {
+                continue;
+            }
+            
+            int j = i + 1;
+            int k = nums.size() - 1;
+
+            while (j < k) {
+                int total = nums[i] + nums[j] + nums[k];
+
+                if (total > 0) {
+                    k--;
+                } else if (total < 0) {
+                    j++;
+                } else {
+                    res.push_back({nums[i], nums[j], nums[k]});
+                    j++;
+
+                    while (nums[j] == nums[j-1] && j < k) {
+                        j++;
+                    }
+                }
+            }
+        }
+        return res;        
     }
 };
