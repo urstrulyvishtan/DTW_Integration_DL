@@ -4,37 +4,35 @@
 #include <algorithm>
 #include<unordered_map>
 #include<unordered_set>
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode() : val(0), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
+ * };
+ */
 class Solution {
 public:
-    vector<vector<int>> threeSum(vector<int>& nums) {
-        vector<vector<int>> res;
-        sort(nums.begin(), nums.end());
-
-        for (int i = 0; i < nums.size(); i++) {
-            if (i > 0 && nums[i] == nums[i-1]) {
-                continue;
-            }
-            
-            int j = i + 1;
-            int k = nums.size() - 1;
-
-            while (j < k) {
-                int total = nums[i] + nums[j] + nums[k];
-
-                if (total > 0) {
-                    k--;
-                } else if (total < 0) {
-                    j++;
-                } else {
-                    res.push_back({nums[i], nums[j], nums[k]});
-                    j++;
-
-                    while (nums[j] == nums[j-1] && j < k) {
-                        j++;
-                    }
-                }
-            }
+    void solve(TreeNode* root, int &cnt, int &ans, int k){
+        if(root == NULL)    return;
+        //left, root, right 
+        solve(root->left, cnt, ans, k);
+        cnt++;
+        if(cnt == k){
+            ans = root->val;
+            return;
         }
-        return res;        
+        solve(root->right, cnt, ans, k);
+    }
+    int kthSmallest(TreeNode* root, int k) {
+        
+        int cnt = 0;        
+        int ans;
+        solve(root, cnt, ans, k);
+        return ans;
     }
 };
