@@ -17,22 +17,16 @@
  */
 class Solution {
 public:
-    void solve(TreeNode* root, int &cnt, int &ans, int k){
-        if(root == NULL)    return;
-        //left, root, right 
-        solve(root->left, cnt, ans, k);
-        cnt++;
-        if(cnt == k){
-            ans = root->val;
-            return;
-        }
-        solve(root->right, cnt, ans, k);
+    bool isValidBST(TreeNode* root) {
+        return valid(root, LONG_MIN, LONG_MAX);        
     }
-    int kthSmallest(TreeNode* root, int k) {
-        
-        int cnt = 0;        
-        int ans;
-        solve(root, cnt, ans, k);
-        return ans;
-    }
+
+private:
+    bool valid(TreeNode* node, long minimum, long maximum) {
+        if (!node) return true;
+
+        if (!(node->val > minimum && node->val < maximum)) return false;
+
+        return valid(node->left, minimum, node->val) && valid(node->right, node->val, maximum);
+    }    
 };
