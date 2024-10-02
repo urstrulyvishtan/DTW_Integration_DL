@@ -6,52 +6,37 @@
 #include<unordered_set>
 class Solution {
 public:
-    int calculate(string s) {
-        stack<int> st;
-        int num = 0;
-        char prevOperator = '+';
+    int uniquePathsWithObstacles(vector<vector<int>>& obstacleGrid) {
+        int m = obstacleGrid.size();
+        int n = obstacleGrid[0].size();
 
-        for (int i = 0; i <= s.length(); i++) {
-            char ch = (i < s.length()) ? s[i] : '\0';
-
-            if (isdigit(ch)) {
-                num = num * 10 + (ch - '0');
-            }
-
-            if ((!isdigit(ch) && ch != ' ') || i == s.length()) {
-                if (prevOperator == '+') st.push(num);
-                if (prevOperator == '-') st.push(-num);
-                if (prevOperator == '*') {
-                    int temp = st.top() * num;
-                    st.pop();
-                    st.push(temp);
+        vector<vector<int>> dp(m, vector<int>(n, 0));
+        if (obstacleGrid[m - 1][n - 1] == 1) {
+            return 0;
+        }
+        dp[m - 1][n - 1] = 1;
+        for (int i = m - 1; i >= 0; i--) {
+            for (int j = n - 1; j >= 0; j--) {
+                if (i == m - 1 && j == n - 1) {
+                    continue;
                 }
-                if (prevOperator == '/') {
-                    int temp = st.top() / num;
-                    st.pop();
-                    st.push(temp);
+                if (obstacleGrid[i][j] == 1) {
+                    dp[i][j] = 0;
+                } 
+                else {
+                    long long ans1, ans2;
+                    if (i < m - 1)
+                        ans1 = dp[i + 1][j];
+                    else
+                        ans1 = 0;
+                    if (j < n - 1)
+                        ans2 = dp[i][j + 1];
+                    else
+                        ans2 = 0;
+                    dp[i][j] = ans1 + ans2;
                 }
-
-                prevOperator = ch;
-                num = 0;
             }
         }
-
-        int result = 0;
-        while (!st.empty()) {
-            result += st.top();
-            st.pop();
-        }
-
-        return result;
+        return dp[0][0];
     }
 };
-
-// Usage Example
-// int main() {
-//     Solution sol;
-//     string expression = "3+2*2";
-//     int result = sol.calculate(expression);
-//     cout << "Result: " << result << endl; // Output: 7
-//     return 0;
-// }
