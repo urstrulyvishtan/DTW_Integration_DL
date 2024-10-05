@@ -4,28 +4,25 @@
 #include <algorithm>
 #include<unordered_map>
 #include<unordered_set>
-/**
- * Definition for a binary tree node.
- * struct TreeNode {
- *     int val;
- *     TreeNode *left;
- *     TreeNode *right;
- *     TreeNode() : val(0), left(nullptr), right(nullptr) {}
- *     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
- *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
- * };
- */
 class Solution {
 public:
-    int rangeSumBST(TreeNode* root, int low, int high) {
-        if(root == NULL) return 0;
-        int sum_left = rangeSumBST(root->left, low, high);
-        int sum_right = rangeSumBST(root->right, low, high);
-        if(root->val >= low && root->val<=high){
-            
-            return root->val + sum_left+sum_right;
+    int subarraySum(vector<int>& arr, int k) {
+        vector<int>pre(arr.size(),0);
+        pre[0] = arr[0];
+        for(int i=1; i<arr.size(); i++){
+            pre[i] = arr[i] + pre[i-1];
         }
-
-        return sum_left+sum_right;
+        unordered_map<int,int> mp;
+        int count = 0;
+        for(int i=0; i<arr.size(); i++){
+            if(pre[i] == k) count++;
+             
+            int diff = pre[i] - k;
+            // if the difference exist in map
+            if(mp.find(diff) != mp.end()) count += mp[diff];
+            mp[pre[i]]++;
+            
+        }
+        return count;
     }
 };
