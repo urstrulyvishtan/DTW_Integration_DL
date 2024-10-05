@@ -4,26 +4,28 @@
 #include <algorithm>
 #include<unordered_map>
 #include<unordered_set>
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode() : val(0), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+ *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
+ * };
+ */
 class Solution {
 public:
-    double myPow(double x, int n) {
-        long long N = n;
-        if(N<0){
-            x = 1/x;
-            N = -N;
+    int rangeSumBST(TreeNode* root, int low, int high) {
+        if(root == NULL) return 0;
+        int sum_left = rangeSumBST(root->left, low, high);
+        int sum_right = rangeSumBST(root->right, low, high);
+        if(root->val >= low && root->val<=high){
+            
+            return root->val + sum_left+sum_right;
         }
-        return fastPow(x, N);
-    }
-private:
-    double fastPow(double x, long long n){
-        if(n==0){
-            return 1.0;
-        }
-        double half = fastPow(x, n/2);
-        if(n%2 == 0){
-            return half*half;
-        } else{
-            return half*half*x;
-        }
+
+        return sum_left+sum_right;
     }
 };
