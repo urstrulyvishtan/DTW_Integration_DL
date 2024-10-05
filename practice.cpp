@@ -17,6 +17,7 @@ public:
         }
         return true;
     }
+	
 private:
     bool isPalindrome(const std::string& s, int left, int right){
         while(left<right){
