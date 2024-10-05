@@ -4,27 +4,26 @@
 #include <algorithm>
 #include<unordered_map>
 #include<unordered_set>
-/**
- * Definition for a binary tree node.
- * struct TreeNode {
- *     int val;
- *     TreeNode *left;
- *     TreeNode *right;
- *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
- * };
- */
 class Solution {
 public:
-    TreeNode* lowestCommonAncestor(TreeNode* root, TreeNode* p, TreeNode* q) {
-        if(root == p || root == q || root == NULL){
-            return root;
+    double myPow(double x, int n) {
+        long long N = n;
+        if(N<0){
+            x = 1/x;
+            N = -N;
         }
-        TreeNode* lca_from_left = lowestCommonAncestor(root->left, p, q);
-        TreeNode* lca_from_right = lowestCommonAncestor(root->right, p, q);
-        if(lca_from_left&&lca_from_right){
-            return root;
-        }else{
-            return lca_from_left ? lca_from_left : lca_from_right;
+        return fastPow(x, N);
+    }
+private:
+    double fastPow(double x, long long n){
+        if(n==0){
+            return 1.0;
+        }
+        double half = fastPow(x, n/2);
+        if(n%2 == 0){
+            return half*half;
+        } else{
+            return half*half*x;
         }
     }
 };
