@@ -4,27 +4,27 @@
 #include <algorithm>
 #include<unordered_map>
 #include<unordered_set>
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+ * };
+ */
 class Solution {
 public:
-    bool validPalindrome(string s) {
-        int left = 0, right = s.size()-1;
-        while(left<right){
-            if(s[left]!=s[right]){
-                return isPalindrome(s, left+1, right)||isPalindrome(s, left, right-1);
-            }
-            left++;
-            right--;
+    TreeNode* lowestCommonAncestor(TreeNode* root, TreeNode* p, TreeNode* q) {
+        if(root == p || root == q || root == NULL){
+            return root;
         }
-        return true;
-    }
-	
-private:
-    bool isPalindrome(const std::string& s, int left, int right){
-        while(left<right){
-            if(s[left]!=s[right]) return false;
-            left++;
-            right--;
+        TreeNode* lca_from_left = lowestCommonAncestor(root->left, p, q);
+        TreeNode* lca_from_right = lowestCommonAncestor(root->right, p, q);
+        if(lca_from_left&&lca_from_right){
+            return root;
+        }else{
+            return lca_from_left ? lca_from_left : lca_from_right;
         }
-        return true;
     }
 };
