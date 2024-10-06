@@ -6,23 +6,27 @@
 #include<unordered_set>
 class Solution {
 public:
-    int subarraySum(vector<int>& arr, int k) {
-        vector<int>pre(arr.size(),0);
-        pre[0] = arr[0];
-        for(int i=1; i<arr.size(); i++){
-            pre[i] = arr[i] + pre[i-1];
+vector<int> g;
+    Solution(vector<int>& w) {
+        g.resize(w.size());
+        for(int i = 0; i<w.size(); i++){
+            if(i == 0){
+                g[i] = w[i];
+                continue;
+            } g[i] = g[i-1]+w[i];
         }
-        unordered_map<int,int> mp;
-        int count = 0;
-        for(int i=0; i<arr.size(); i++){
-            if(pre[i] == k) count++;
-             
-            int diff = pre[i] - k;
-            // if the difference exist in map
-            if(mp.find(diff) != mp.end()) count += mp[diff];
-            mp[pre[i]]++;
-            
-        }
-        return count;
+    }
+    
+    int pickIndex() {
+        // random number from 0, w.length-1
+        int rand_i = rand()%g.back();
+        int index = upper_bound(g.begin(), g.end(), rand_i)-g.begin();
+        return index;
     }
 };
+
+/**
+ * Your Solution object will be instantiated and called as such:
+ * Solution* obj = new Solution(w);
+ * int param_1 = obj->pickIndex();
+ */
