@@ -4,38 +4,54 @@
 #include <algorithm>
 #include<unordered_map>
 #include<unordered_set>
-class KthLargest {
+class Solution {
 public:
+    int calculate(string s) {
+        stack<int> st;
+        int num = 0;
+        char prevOperator = '+';
 
-    priority_queue<int,vector<int>,greater<int>> pq;
-    int K;
-    
-    KthLargest(int k, vector<int>& nums) {
+        for (int i = 0; i <= s.length(); i++) {
+            char ch = (i < s.length()) ? s[i] : '\0';
 
-        K=k;
+            if (isdigit(ch)) {
+                num = num * 10 + (ch - '0');
+            }
 
-        for(auto &num:nums){
+            if ((!isdigit(ch) && ch != ' ') || i == s.length()) {
+                if (prevOperator == '+') st.push(num);
+                if (prevOperator == '-') st.push(-num);
+                if (prevOperator == '*') {
+                    int temp = st.top() * num;
+                    st.pop();
+                    st.push(temp);
+                }
+                if (prevOperator == '/') {
+                    int temp = st.top() / num;
+                    st.pop();
+                    st.push(temp);
+                }
 
-            pq.push(num);
-
-            if(pq.size() > k) pq.pop();
-            
+                prevOperator = ch;
+                num = 0;
+            }
         }
-    }
-    
-    int add(int val) {
 
-        pq.push(val);
+        int result = 0;
+        while (!st.empty()) {
+            result += st.top();
+            st.pop();
+        }
 
-        if(pq.size() > K) pq.pop();
-
-        return pq.top();
-        
+        return result;
     }
 };
 
-/**
- * Your KthLargest object will be instantiated and called as such:
- * KthLargest* obj = new KthLargest(k, nums);
- * int param_1 = obj->add(val);
- */
+// Usage Example
+// int main() {
+//     Solution sol;
+//     string expression = "3+2*2";
+//     int result = sol.calculate(expression);
+//     cout << "Result: " << result << endl; // Output: 7
+//     return 0;
+// }
