@@ -6,52 +6,22 @@
 #include<unordered_set>
 class Solution {
 public:
-    int calculate(string s) {
-        stack<int> st;
-        int num = 0;
-        char prevOperator = '+';
-
-        for (int i = 0; i <= s.length(); i++) {
-            char ch = (i < s.length()) ? s[i] : '\0';
-
-            if (isdigit(ch)) {
-                num = num * 10 + (ch - '0');
-            }
-
-            if ((!isdigit(ch) && ch != ' ') || i == s.length()) {
-                if (prevOperator == '+') st.push(num);
-                if (prevOperator == '-') st.push(-num);
-                if (prevOperator == '*') {
-                    int temp = st.top() * num;
-                    st.pop();
-                    st.push(temp);
-                }
-                if (prevOperator == '/') {
-                    int temp = st.top() / num;
-                    st.pop();
-                    st.push(temp);
-                }
-
-                prevOperator = ch;
-                num = 0;
+    vector<vector<int>> kClosest(vector<vector<int>>& points, int k) {
+        priority_queue<pair<int, vector<int>>> maxHeap;
+        for(const auto& point:points){
+            int x = point[0];
+            int y = point[1];
+            int distance = x*x + y*y;
+            maxHeap.push({distance, point});
+            if(maxHeap.size()>k){
+                maxHeap.pop();
             }
         }
-
-        int result = 0;
-        while (!st.empty()) {
-            result += st.top();
-            st.pop();
+        vector<vector<int>> result;
+        while(!maxHeap.empty()){
+            result.push_back(maxHeap.top().second);
+            maxHeap.pop();
         }
-
         return result;
     }
 };
-
-// Usage Example
-// int main() {
-//     Solution sol;
-//     string expression = "3+2*2";
-//     int result = sol.calculate(expression);
-//     cout << "Result: " << result << endl; // Output: 7
-//     return 0;
-// }
